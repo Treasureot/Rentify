@@ -1,0 +1,97 @@
+.revenue_card {
+    display: flex;
+    justify-content: space-between;
+    background-color: #F2F4F6;
+    height: 130px;
+    padding: 24px;
+    border-radius: 12px;
+    position: relative;
+
+    .revenue_details {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 36px;
+    }
+
+    img {
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+    }
+}
+
+.default_card {
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
+    padding: 24px;
+    border-radius: 12px;
+    position: relative;
+
+    .revenue_details {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 36px;
+        margin-top: 0px;
+    }
+}
+
+.occupancy_card {
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
+    padding: 24px;
+    border-radius: 12px;
+    position: relative;
+
+    .occupancy_details {
+        font-size: 36px;
+        margin-top: 12px;
+
+        .occupancy_label {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
+
+.management_card {
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
+    padding: 24px;
+    border-radius: 12px;
+    position: relative;
+
+    .management_details {
+        font-size: 36px;
+        margin-top: 12px;
+
+        .management_label {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+            margin-bottom: 12px;
+            
+            a {
+                display: inline-flex;
+                align-items: center;
+                gap: 30px;
+                color: var(--text);
+                font-weight: 500;
+            }
+
+
+            .management_group {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                gap: 12px;
+            }
+        }
+    }
+}
+
