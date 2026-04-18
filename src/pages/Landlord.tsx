@@ -5,6 +5,7 @@ import RevenueCard from '../components/RevenueCard';
 import DefaultCard from '../components/DefaultCard';
 import OccupancyCard from '../components/OccupancyCard';
 import ManagementCard from '../components/ManagementCard'
+import Activity from '../components/Activity'
 import { FaArrowRight } from "react-icons/fa";
 
 const Landlord = () => {
@@ -77,6 +78,38 @@ const Landlord = () => {
                                 </div>
                             </div>
                         </div>                                                                            
+                    </div>
+
+                    <div className="recent_activities">
+                        <div className="activities_header">
+                            <h3>Recent Activity</h3>
+                            <a href="">View all history</a>
+                        </div>
+
+                        <div className="activity_body">
+                            <Activity 
+                            title='Payment received from John Doe'
+                            time='2 hours ago'
+                            description='Transaction for Penthouse B, Rentify Towers completed successfully'
+                            amount={450000}
+                            />
+                        </div>
+
+                        <div className="activity_body">
+                            <Activity 
+                            title='New Tenant Assigned'
+                            time='Yesterday'
+                            description='Sarah Jenkins has been verified and assigned to Unit 402, Lekki Heights.'
+                            />
+                        </div>
+
+                        <div className="activity_body">
+                            <Activity 
+                            title='Maintenance Request: Plumbing'
+                            time='Oct 12'
+                            description='Unit 105 reported a leak in the master bathroom. Urgent attention required.'
+                            />
+                        </div>                                                   
                     </div>
                 </div>
             </div>

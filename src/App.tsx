@@ -6,6 +6,7 @@ import Property from "./pages/Property";
 import LandlordLogin from "./pages/LandlordLogin";
 import Contact from "./pages/Contact"
 import Landlord from "./pages/Landlord";
+import LandlordProperty from "./pages/LandlordProperty"
 
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/landlord" element={<Landlord />} />
+      <Route path="/landlord-property" element={<LandlordProperty />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

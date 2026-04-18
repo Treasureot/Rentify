@@ -1,6 +1,7 @@
 import '../Styles/Cards.css'
 import { HiOutlineDocumentText, HiChevronRight } from 'react-icons/hi';
 import { MdOutlineReceiptLong } from 'react-icons/md';
+import { GrUserWorker } from 'react-icons/gr';
 
 type ManagementCardProps = {
     label: string;
@@ -45,7 +46,17 @@ const ManagementCard = ({
                             </div>
                             <HiChevronRight size={24}/>
                         </a>
-                    </div>                    
+                    </div>
+
+                    <div className="management_label">
+                        <a href="">
+                            <div className="management_group">
+                                <GrUserWorker size={20}/>
+                                <p>Contractor Hub</p>                            
+                            </div>
+                            <HiChevronRight size={24}/>
+                        </a>
+                    </div>                                             
                 </div>
             </div>
         </div>

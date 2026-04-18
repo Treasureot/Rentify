@@ -31,7 +31,7 @@ const LandlordSidebar = () => {
 
                         <li>
                             <NavLink 
-                                to="/" 
+                                to="/landlord-property" 
                                 className={({ isActive }) => isActive ? "active" : ""}
                                 >
                                 <div className="sidebar-item">
