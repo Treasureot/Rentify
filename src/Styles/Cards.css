@@ -211,3 +211,168 @@
 
     }
 }
+
+
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+
+.add_modal {
+  background-color: var(--bg);
+  border-radius: 12px;
+  max-height: 85vh;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 500px;
+  animation: fadeInScale 0.25s ease;
+}
+
+
+.modal_header {
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #f7f7f7;
+}
+
+.modal_header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+
+.modal_body {
+  width: 100%;
+  margin-top: 0;
+
+  form  {
+  display: inline-flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 85%;
+  padding: 20px;
+  align-self: center;
+}
+
+}
+
+
+.input_group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+
+.input_group input,
+.input_group select,
+.input_group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background-color: var(--bg);
+  font-size: 14px;
+  color: var(--bodytext);
+  outline: none;
+  transition: 0.2s ease;
+  margin-bottom: 12px;
+}
+
+
+.input_group textarea {
+  min-height: 60px;
+  resize: none;
+  margin-bottom: 12px;
+  
+}
+
+
+.input_group input:focus,
+.input_group select:focus,
+.input_group textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+
+.input_group input[type="file"] {
+  padding: 8px;
+  border: 1px dashed #d0d5dd;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+
+.modal_actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 0px;
+
+  .btn_secondary {
+  padding: 12px;
+  border-radius: 8px;
+  background: #f0fff7;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn_primary {
+    font-size: 14px;
+}
+
+.btn_secondary:hover {
+  background: #f9fafb;
+}
+  
+}
+
+
+.modal_actions button {
+  flex: 1;
+
+}
+
+
+
+
+
+
+.input_body {
+  display: flex;
+  gap: 45px;
+  width: 100%;
+}
+
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+

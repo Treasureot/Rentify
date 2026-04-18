@@ -1,17 +1,17 @@
 const Button = ({
     type = "button",
-    onclick,
+    onClick,
     label,
 }: {
     type?: "button" | "submit" | "reset";
-    onclick?: () => void;
+    onClick?: () => void;
     label?: string;
 }) => {
     return (
         <>
             <button 
             className="btn_secondary" 
-            onClick={onclick} type={type}>
+            onClick={onClick} type={type}>
                 {label}
             </button>
         </>
