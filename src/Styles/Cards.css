@@ -74,15 +74,14 @@
             gap: 40px;
             width: 100%;
             margin-bottom: 12px;
-            
+
             a {
                 display: inline-flex;
                 align-items: center;
-                gap: 50px;
+                gap: 40px;
                 color: var(--text);
                 font-weight: 500;
             }
-
 
             .management_group {
                 display: inline-flex;
@@ -109,6 +108,7 @@
     .activity_description {
         margin-top: 0px;
     }
+
     .amount_value {
         display: inline-flex;
         align-items: center;
@@ -129,12 +129,10 @@
     .property_table {
         width: 100%;
 
-
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #eee;
-            width: 30%;
             font-size: 15px;
         }
 
@@ -151,24 +149,45 @@
         font-weight: 500;
     }
 
-    .status.occupied {
-        background-color:  #f9f0f0;
+    .status.rejected {
+        background-color: #f9f0f0;
         color: #d92d20;
         font-weight: 600;
     }
 
-    .status.vacant {
+    .status.approved {
         background-color: #f0fff7;
         color: var(--primary);
         font-weight: 600;
         border: 1px solid #e5fef1;
     }
 
-    .actions.group {
+    .status.pending_approval {
+        background-color: #fff1c2;
+        color: #e5a000;
+        font-weight: 600;
+    }
+
+     .occupancystatus.occupied {
+        background-color: #f9f0f0;
+        color: #d92d20;
+        font-weight: 600;
+    }
+    
+     .occupancystatus.vacant {
+        background-color: #f0fff7;
+        color: var(--primary);
+        font-weight: 600;
+        border: 1px solid #e5fef1;
+    }    
+    
+    
+
+    .actions_group {
         position: relative;
         width: 60px;
-
     }
+
     .action_btn {
         background-color: #f7f7f7;
         border: none;
@@ -193,7 +212,7 @@
         min-width: 120px;
         padding: 6px 12px;
 
-        Button {
+        button {
             padding: 10px;
             border: none;
             background-color: var(--bg);
@@ -206,173 +225,242 @@
             &:hover {
                 background-color: #f5f5f5;
             }
-
         }
-
     }
 }
 
 
 .modal_overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
 }
-
 
 .add_modal {
-  background-color: var(--bg);
-  border-radius: 12px;
-  max-height: 85vh;
-  overflow-y: auto;
-  width: 100%;
-  max-width: 500px;
-  animation: fadeInScale 0.25s ease;
+    background-color: var(--bg);
+    border-radius: 12px;
+    max-height: 85vh;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 500px;
+    animation: fadeInScale 0.25s ease;
 }
 
-
 .modal_header {
-  padding: 20px;
-  border-bottom: 1px solid #f0f0f0;
-  background-color: #f7f7f7;
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #f7f7f7;
 }
 
 .modal_header h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-h);
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-h);
 }
-
 
 .modal_body {
-  width: 100%;
-  margin-top: 0;
+    width: 100%;
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
 
-  form  {
-  display: inline-flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 85%;
-  padding: 20px;
-  align-self: center;
+    form {
+        display: flex; 
+        flex-direction: column;
+        align-items: center;
+        width: 85%;
+        padding: 20px;
+    }
 }
-
-}
-
 
 .input_group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
 }
-
 
 .input_group input,
 .input_group select,
 .input_group textarea {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background-color: var(--bg);
-  font-size: 14px;
-  color: var(--bodytext);
-  outline: none;
-  transition: 0.2s ease;
-  margin-bottom: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background-color: var(--bg);
+    font-size: 14px;
+    color: var(--bodytext);
+    outline: none;
+    transition: 0.2s ease;
+    margin-bottom: 12px;
 }
-
 
 .input_group textarea {
-  min-height: 60px;
-  resize: none;
-  margin-bottom: 12px;
-  
+    min-height: 60px;
+    resize: none;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background-color: var(--bg);
+    font-size: 14px;
+    color: var(--bodytext);
+    outline: none;
+    transition: 0.2s ease;
+    margin-bottom: 12px;
 }
-
 
 .input_group input:focus,
 .input_group select:focus,
 .input_group textarea:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--accent-bg);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--accent-bg);
 }
-
 
 .input_group input[type="file"] {
-  padding: 8px;
-  border: 1px dashed #d0d5dd;
-  background: #fafafa;
-  cursor: pointer;
+    padding: 8px;
+    border: 1px dashed #d0d5dd;
+    background: #fafafa;
+    cursor: pointer;
 }
-
 
 .modal_actions {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  margin-top: 0px;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 0px;
 
-  .btn_secondary {
-  padding: 12px;
-  border-radius: 8px;
-  background: #f0fff7;
-  color: var(--primary);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
+    .btn_secondary {
+        padding: 12px;
+        border-radius: 8px;
+        background: #f0fff7;
+        color: var(--primary);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
 
-.btn_primary {
-    font-size: 14px;
-}
+    .btn_primary {
+        font-size: 14px;
+    }
 
-.btn_secondary:hover {
-  background: #f9fafb;
+    .btn_secondary:hover {
+        background: #f9fafb;
+    }
 }
-  
-}
-
 
 .modal_actions button {
-  flex: 1;
-
+    flex: 1;
 }
-
-
-
-
-
 
 .input_body {
-  display: flex;
-  gap: 45px;
-  width: 100%;
+    display: flex;
+    gap: 24px;
+    width: 100%;
 }
-
 
 @keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 
+.success_modal {
+    background-color: var(--bg);
+    border-radius: 12px;
+    max-height: 60vh;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;         
+    animation: fadeInScale 0.25s ease;
+    display: flex;         
+    flex-direction: column;   
+    justify-content: center;
+    align-items: center;
+    gap: 12px;               
+
+    .success_img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0fff7;
+        padding: 20px;
+        border-radius: 100px;
+    }
+
+    img {
+        width: 80px;
+        margin-top: 0;       
+    }
+
+    h3 {
+        font-size: 20px;      
+        text-align: center;
+        color: var(--header-text);
+        margin: 0;
+    }
+
+    p {
+        font-size: 14px;
+        color: var(--bodytext); 
+        text-align: center;
+        margin: 0;
+        width: 80%;
+    }
+
+    .modal_action {
+        width: 100%;          
+        margin-top: 24px;
+
+        a {
+            text-decoration: none;
+            width: 100%;
+            display: block;
+        }
+
+        .btn_primary { 
+            margin-top: 0;
+            width: 100%;
+            padding: 12px 24px;
+            border-radius: 8px;
+            background-color: var(--primary);  
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border: none;     
+
+            &:hover {
+                background-color: var(--primary-hover, #2d9e6b); 
+            }
+        }
+    }
+}
+
+@keyframes fadeInScale {       
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

@@ -22,4 +22,4 @@ const LoginImg = () => {
     );
 }
 
-export default LoginImg
+export default LoginImg;

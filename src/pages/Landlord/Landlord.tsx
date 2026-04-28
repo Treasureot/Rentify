@@ -1,14 +1,19 @@
-import '../Styles/Landlord.css';
-import LandlordSidebar from '../components/LandlordSidebar';
-import DashboardHeader from '../components/DashboardHeader';
-import RevenueCard from '../components/RevenueCard';
-import DefaultCard from '../components/DefaultCard';
-import OccupancyCard from '../components/OccupancyCard';
-import ManagementCard from '../components/ManagementCard'
-import Activity from '../components/Activity'
+import '../../Styles/Landlord.css';
+import LandlordSidebar from '../../components/LandlordSidebar';
+import DashboardHeader from '../../components/DashboardHeader';
+import RevenueCard from '../../components/RevenueCard';
+import DefaultCard from '../../components/DefaultCard';
+import OccupancyCard from '../../components/OccupancyCard';
+import ManagementCard from '../../components/ManagementCard'
+import Activity from '../../components/Activity'
 import { FaArrowRight } from "react-icons/fa";
 
 const Landlord = () => {
+
+    const firstName = localStorage.getItem('firstName') || '';
+    const lastName  = localStorage.getItem('lastName')  || '';
+
+
     return (
         <>
         <div className="landlord">
@@ -18,10 +23,10 @@ const Landlord = () => {
 
             <div className="landlord_body_right">
                 <div className="landlord_dashboard_header">
-                    <DashboardHeader 
-                    firstName='Tunde'
-                    lastName='Omoniyi'
-                     />
+                    <DashboardHeader
+                     firstName={firstName}
+                     lastName={lastName}
+                    />
                 </div>
 
                 <div className="landlord_body">

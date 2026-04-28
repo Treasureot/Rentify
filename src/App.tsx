@@ -1,12 +1,14 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import TenantLogin from "./pages/TenantLogin";
+import TenantLogin from "./pages/Tenants/TenantLogin";
 import SignUp from "./pages/SignUp";
 import Index from "./pages/Index";
 import Property from "./pages/Property";
-import LandlordLogin from "./pages/LandlordLogin";
+import LandlordLogin from "./pages/Landlord/LandlordLogin";
 import Contact from "./pages/Contact"
-import Landlord from "./pages/Landlord";
-import LandlordProperty from "./pages/LandlordProperty"
+import Landlord from "./pages/Landlord/Landlord";
+import LandlordProperty from "./pages/Landlord/LandlordProperty"
+import Tenant from "./pages/Tenants/Tenant"
+
 
 
 export default function App() {
@@ -20,6 +22,7 @@ export default function App() {
       <Route path="/contact" element={<Contact />} />
       <Route path="/landlord" element={<Landlord />} />
       <Route path="/landlord-property" element={<LandlordProperty />} />
+      <Route path="/tenant" element={<Tenant />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

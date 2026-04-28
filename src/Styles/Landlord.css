@@ -4,7 +4,7 @@
     padding: 24px;
     max-width: 210px;
     min-height: 100vh;
-    
+
     .logo_header {
         width: 120px;
         text-align: center;
@@ -14,31 +14,31 @@
             height: 28px;
         }
 
-        p{
+        p {
             font-size: 12px;
             color: #94A3B8;
         }
     }
 
-.landlord_sidebar_link {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    .landlord_sidebar_link {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
 
         ul {
             display: flex;
-            flex-direction: column; 
-            align-items: left;
+            flex-direction: column;
+            align-items: flex-start;
             list-style: none;
             margin: 0;
             padding: 0;
         }
 
         ul li {
-            display: inline-flex; 
+            display: inline-flex;
             align-items: center;
             cursor: pointer;
-        }    
+        }
 
         .sidebar-item {
             display: flex;
@@ -54,19 +54,19 @@
 
             &:hover {
                 background-color: #131516;
-                width: 100%;
-                border-radius: 8px; 
-                width: 190px;    
-                color: var(--primary);           
+                border-radius: 8px;
+                width: 190px;
+                color: var(--primary);
             }
         }
+
         .active {
-            color: var(--primary);
+            color: var(--bg);
             background-color: var(--primary);
             border-radius: 8px;
 
             &:hover {
-              background-color: var(--primary); 
+                background-color: var(--primary);
             }
         }
     }
@@ -77,16 +77,40 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 24px;
+    height: 80px;
+    padding: 0 24px;
     background-color: var(--bg);
-    box-shadow: rgba(0, 0, 0, 0.8) 0 4px 6px -2;
-    border-bottom: 0.5px solid var(--border);
+    box-shadow: 0 rgba(255, 255, 255, 0.2) 0 var(--border);
+    border-bottom: 0.1px solid var(--border);
+    flex: 1;
+
+    .dashboard_header_left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 2px;
+
+
+        h2 {
+            font-size: 30px !important;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.3;
+            color: var(--text-h);
+        }
+
+        p {
+            font-size: 13px;
+            margin: 0;
+            color: var(--text);
+        }
+    }
 
     .dashboard_header_right {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 20px;
+        gap: 16px;
 
         .notification_icon {
             background-color: #f0fff7;
@@ -98,34 +122,41 @@
             border-radius: 100%;
             color: var(--primary);
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .profile_icon {
             display: inline-flex;
-            justify-content: center;
             align-items: center;
+            gap: 10px;
             cursor: pointer;
+            overflow: visible;
 
             img {
-            cursor: pointer;
-            background-color: #f7f7f7;
-            padding: 20px;
-            cursor: pointer;
-            border-radius: 100%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 20px;
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+                border-radius: 50%;
+                object-fit: cover;
+                background-color: #f7f7f7;
+                display: block;
             }
 
+            .profile_name {
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 1;
+                color: var(--text-h);
+                white-space: nowrap;
+            }
         }
     }
-}   
+}
 
 .landlord {
     display: flex;
     flex-direction: row;
-    background-color: #ffff;
+    background-color: #ffffff;
     min-height: 100vh;
 
     h2 {
@@ -146,70 +177,69 @@
     .landlord_dashboard_header {
         position: fixed;
         top: 0;
-        left: 10px;
-        bottom: 0;
+        left: 260px;
+        right: 0;
         height: 80px;
         z-index: 1000;
-        margin-left: 260px;
-        right: 0px;
+        display: flex;
+        flex-direction: column;
     }
 
     .landlord_body {
-        margin-top: 80px;
+        margin-top: 60px;
         padding: 24px;
         overflow-y: auto;
         height: calc(100vh - 80px);
 
+        .landlord_metrics {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            gap: 24px;
 
-    .landlord_metrics {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        gap: 24px;
+            .revenue_metrics {
+                width: 40%;
+            }
 
-        .revenue_metrics {
-            width: 40%;
-        }
+            .default_metrics {
+                width: 24%;
 
-        .default_metrics {
-            width: 24%;
-
-            .insight_card {
-                background-color: var(--primary);
-                height: 120px;
-                padding: 24px;
-                border-radius: 12px;
-                color: var(--bg);
-                display: inline-flex;
-                flex-direction: column;
-                justify-content: center;
-                
-                h3 {
-                    margin-top: 0;
-                }
-
-                .insight_icon a {
-                    display: inline-flex;
-                    align-items: center;
+                .insight_card {
+                    background-color: var(--primary);
+                    height: 120px;
+                    padding: 24px;
+                    border-radius: 12px;
                     color: var(--bg);
-                    background-color: rgba(255, 255, 255, 0.2);
-                    padding: 14px;
-                    border-radius: 100px;
+                    display: inline-flex;
+                    flex-direction: column;
+                    justify-content: center;
+
+                    h3 {
+                        margin-top: 0;
+                    }
+
+                    .insight_icon a {
+                        display: inline-flex;
+                        align-items: center;
+                        color: var(--bg);
+                        background-color: rgba(255, 255, 255, 0.2);
+                        padding: 14px;
+                        border-radius: 100px;
+                    }
                 }
             }
         }
-    }
 
-    .recent_activities {
-        margin-top: 40px;
-        
-        .activities_header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .recent_activities {
+            margin-top: 40px;
+
+            .activities_header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
         }
     }
-}
 }
 
 .landlord_property_header {
@@ -227,14 +257,11 @@
         background-color: var(--border);
     }
 
-
-    .landlord_property_header_left Button {
+    .landlord_property_header_left button {
         height: 44px;
         display: inline-flex;
         align-items: center;
         font-size: 14px;
-        font-weight: 600;      
+        font-weight: 600;
     }
-
-
 }

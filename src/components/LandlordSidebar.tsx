@@ -39,43 +39,7 @@ const LandlordSidebar = () => {
                                     <span>Properties</span>
                                 </div>
                             </NavLink>
-                        </li>
-
-                        <li>
-                            <NavLink 
-                                to="/" 
-                                className={({ isActive }) => isActive ? "active" : ""}
-                                >
-                                <div className="sidebar-item">
-                                    <HiOutlineUserGroup />
-                                    <span>Tenants</span>
-                                </div>
-                            </NavLink>
-                        </li>   
-
-                        <li>
-                            <NavLink 
-                                to="/" 
-                                className={({ isActive }) => isActive ? "active" : ""}
-                                >
-                                <div className="sidebar-item">
-                                    <FaRegMoneyBillAlt />
-                                    <span>Finance</span>
-                                </div>
-                            </NavLink>
-                        </li>   
-
-                        <li>
-                            <NavLink 
-                                to="/" 
-                                className={({ isActive }) => isActive ? "active" : ""}
-                                >
-                                <div className="sidebar-item">
-                                    <FiBarChart2 />
-                                    <span>Analytics</span>
-                                </div>
-                            </NavLink>
-                        </li>                                                       
+                        </li>                                                 
                     </ul>
                 </div>
             </div>

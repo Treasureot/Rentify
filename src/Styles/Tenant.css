@@ -1,0 +1,121 @@
+.tenant_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  max-width: 90%;
+  margin: 0 auto;
+  background-color: var(--bg);
+  border-bottom: 0.5px solid var(--border);
+
+  .tenant_header_left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+
+  img {
+    width: 100px;
+    height: auto;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  ul li {
+    display: inline-flex; 
+    align-items: center;
+  }
+
+  ul li a {
+    display: inline-block;
+    color: var(--bodytext);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.4px;
+    transition: color 0.3s ease;
+  }
+
+  ul li a:hover {
+    color: var(--primary);
+  }
+
+  .active {
+    color: var(--primary);
+    border-bottom: 1px solid var(--primary);
+    padding-bottom: 4px;
+  }
+
+  #getStarted {
+    padding: 8px 16px;
+    border-radius: 8px;
+    background-color: var(--primary);
+    color: #fff;
+  }
+
+.tenant_header_right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+
+        .notification_icon {
+            background-color: #f0fff7;
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 100%;
+            color: var(--primary);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .profile_icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            overflow: visible;
+
+            img {
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+                border-radius: 50%;
+                object-fit: cover;
+                background-color: #f7f7f7;
+                display: block;
+            }
+
+            .profile_name {
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 1;
+                color: var(--text-h);
+                white-space: nowrap;
+            }
+        }    
+}  
+}
+
+.tenant_sidebar {
+    background-color: #F2F4F6;
+    color: var(--text-h);
+    padding: 24px;
+    max-width: 300px;
+    min-height: 100vh;
+    position: fixed;
+
+}
+

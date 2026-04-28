@@ -1,10 +1,10 @@
 import { useState } from "react";
 import React from 'react';
-import '../Styles/App.css'
-import LoginImg from '../components/LoginImg'
-import Button from '../components/Button'
+import '../../Styles/App.css'
+import LoginImg from '../../components/LoginImg'
+import Button from '../../components/Button'
 import { RiArrowRightLine } from 'react-icons/ri'
-import Input from "../components/Input";
+import Input from "../../components/Input";
 
 
 
@@ -52,7 +52,7 @@ function TenantLogin() {
               <a href="#">Forgot your password?</a>
             </p>
 
-            <Button label="Sign In" onclick={handleLogin} />
+            <Button label="Sign In" onClick={handleLogin} />
 
             <p style={{textAlign: 'center'}}>Don't have an account? <a href="./sign-up">Sign Up</a></p>
 
