@@ -3,13 +3,15 @@ const Button = ({
     onClick,
     label,
     disabled = false,
-    href
+    href,
+    className
 }: {
     type?: "button" | "submit" | "reset";
     onClick?: () => void;
     label?: string;
     disabled?: boolean;
     href?: string;
+    className?: string;
 }) => {
     if (href) {
         return (

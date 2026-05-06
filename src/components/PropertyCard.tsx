@@ -1,4 +1,3 @@
-import React from "react";
 import "../Styles/PropertyCard.css";
 import { FaBed, FaBath } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";

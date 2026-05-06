@@ -31,7 +31,7 @@ const TopNav = () => {
 
                             <li>
                                 <NavLink 
-                                    to="/tenant-login" 
+                                    to="/landlord-login" 
                                     className={({ isActive }) => isActive ? "active" : ""}
                                 >
                                     Login

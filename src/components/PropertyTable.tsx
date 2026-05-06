@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "../Styles/Cards.css";
 import { type Property } from "../components/AddPropertyModal";
 import PropertyDetails from "../components/PropertyDetails";
@@ -12,7 +12,15 @@ interface PropertyTableProps {
 const PropertyTable = ({ properties, onDelete, onEdit }: PropertyTableProps) => {
     const [openActionId, setOpenActionId] = useState<number | null>(null);
     const [detailsProperty, setDetailsProperty] = useState<Property | null>(null);
-    const actionRef = useRef<HTMLDivElement>(null);
+    const actionRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+
+    const setRef = (id: number) => (el: HTMLDivElement | null) => {
+        if (el) {
+            actionRefs.current.set(id, el);
+        } else {
+            actionRefs.current.delete(id);
+        }
+    };
 
     const toggleAction = (id: number) => {
         setOpenActionId((prev) => (prev === id ? null : id));
@@ -20,13 +28,15 @@ const PropertyTable = ({ properties, onDelete, onEdit }: PropertyTableProps) => 
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (actionRef.current && !actionRef.current.contains(event.target as Node)) {
+            if (openActionId === null) return;
+            const activeRef = actionRefs.current.get(openActionId);
+            if (activeRef && !activeRef.contains(event.target as Node)) {
                 setOpenActionId(null);
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    }, [openActionId]);
 
     const getStatusClass = (status: Property["status"]) => {
         switch (status) {
@@ -38,6 +48,14 @@ const PropertyTable = ({ properties, onDelete, onEdit }: PropertyTableProps) => 
         }
     };
 
+    const getOccupancyClass = (occupancy: Property["occupancy"]) => {
+        switch (occupancy) {
+            case "Occupied": return "occupied";
+            case "Vacant":   return "vacant";
+            default:         return "";
+        }
+    };
+
     return (
         <>
             <div className="table_group">
@@ -46,6 +64,7 @@ const PropertyTable = ({ properties, onDelete, onEdit }: PropertyTableProps) => 
                         <tr>
                             <th style={{ borderRadius: "10px 0px 0px 0px" }}>Title</th>
                             <th>Location</th>
+                            <th>Occupancy Status</th>
                             <th>Property Type</th>
                             <th>Rent Amount</th>
                             <th>Status</th>
@@ -57,10 +76,10 @@ const PropertyTable = ({ properties, onDelete, onEdit }: PropertyTableProps) => 
                         {properties.length === 0 ? (
                             <tr>
                                 <td
-                                    colSpan={6}
+                                    colSpan={7}
                                     style={{ textAlign: "center", padding: "40px", color: "#94A3B8" }}
                                 >
-                                    No properties yet. Click "Add New Property" to get started.
+                                    No properties yet. Click &quot;Add New Property&quot; to get started.
                                 </td>
                             </tr>
                         ) : (
@@ -68,6 +87,11 @@ const PropertyTable = ({ properties, onDelete, onEdit }: PropertyTableProps) => 
                                 <tr key={property.id}>
                                     <td>{property.title}</td>
                                     <td>{property.location}</td>
+                                    <td>
+                                        <span className={`status ${getOccupancyClass(property.occupancy)}`}>
+                                            {property.occupancy ?? "—"}
+                                        </span>
+                                    </td>
                                     <td>{property.type}</td>
                                     <td>{property.rent}</td>
                                     <td>
@@ -77,7 +101,7 @@ const PropertyTable = ({ properties, onDelete, onEdit }: PropertyTableProps) => 
                                     </td>
 
                                     <td className="actions_group">
-                                        <div className="action_body" ref={actionRef}>
+                                        <div className="action_body" ref={setRef(property.id)}>
                                             <button
                                                 className="action_btn"
                                                 onClick={() => toggleAction(property.id)}
@@ -88,22 +112,24 @@ const PropertyTable = ({ properties, onDelete, onEdit }: PropertyTableProps) => 
                                             {openActionId === property.id && (
                                                 <div className="dropdown_menu">
                                                     <button onClick={() => {
+                                                        setDetailsProperty(property);
+                                                        setOpenActionId(null);
+                                                    }}>
+                                                        View Details
+                                                    </button>
+
+                                                    <button onClick={() => {
                                                         onEdit(property);
                                                         setOpenActionId(null);
                                                     }}>
                                                         Edit
                                                     </button>
+
                                                     <button onClick={() => {
                                                         onDelete(property.id);
                                                         setOpenActionId(null);
                                                     }}>
                                                         Delete
-                                                    </button>
-                                                    <button onClick={() => {
-                                                        setDetailsProperty(property);
-                                                        setOpenActionId(null);
-                                                    }}>
-                                                        View Details
                                                     </button>
                                                 </div>
                                             )}
@@ -132,6 +158,7 @@ const PropertyTable = ({ properties, onDelete, onEdit }: PropertyTableProps) => 
                             location={detailsProperty.location}
                             price={detailsProperty.rent}
                             status={detailsProperty.status}
+                            occupancy={detailsProperty.occupancy}
                             type={detailsProperty.type}
                             beds={0}
                             baths={0}

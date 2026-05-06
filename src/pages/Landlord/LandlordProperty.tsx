@@ -4,7 +4,7 @@ import DashboardHeader from "../../components/DashboardHeader";
 import Button from "../../components/Button";
 import PropertyTable from "../../components/PropertyTable";
 import AddPropertyModal, { type Property } from "../../components/AddPropertyModal";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const initialProperties: Property[] = [
     {
@@ -14,8 +14,9 @@ const initialProperties: Property[] = [
         type: "Shop",
         rent: "₦2,000,000/year",
         status: "Pending Approval",
-        occupancystatus: "Occupied"
+        occupancy: "Occupied",
     },
+    
     {
         id: 2,
         title: "3 Bedroom Duplex",
@@ -23,7 +24,7 @@ const initialProperties: Property[] = [
         type: "Apartment",
         rent: "₦2,000,000/year",
         status: "Approved",
-        occupancystatus: "Vacant"
+        occupancy: "Vacant",
     },
 ];
 
@@ -31,12 +32,14 @@ const LandlordProperty = () => {
     const [openModal, setOpenModal] = useState(false);
     const [properties, setProperties] = useState<Property[]>(initialProperties);
     const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+    const firstName = localStorage.getItem("firstName") || "";
+    const lastName  = localStorage.getItem("lastName")  || "";
 
     const handleSaveProperty = (property: Property) => {
         setProperties((prev) => {
             const exists = prev.find((p) => p.id === property.id);
             if (exists) {
-                return prev.map((p) => (p.id === property.id ? property : p));
+               return prev.map((p) => (p.id === property.id ? property : p));
             }
             return [...prev, property];
         });
@@ -64,7 +67,10 @@ const LandlordProperty = () => {
 
             <div className="landlord_body_right">
                 <div className="landlord_dashboard_header">
-                    <DashboardHeader firstName="Tunde" lastName="Omoniyi" />
+                    <DashboardHeader
+                    firstName={firstName} 
+                    lastName={lastName}
+                    />
                 </div>
 
                 <div className="landlord_body">

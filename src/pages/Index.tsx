@@ -40,8 +40,14 @@ function Index() {
                   <p>Browse verified properties, connect with landlords, and manage your rent—all in one place.</p>
 
                   <div className="hero_button">
-                    <Button label='Browse Properties' />
-                    <ButtonAlt label='List Your Property' />
+                    <Button 
+                    label='Browse Properties'
+                    href="/property" 
+                    />
+                    <ButtonAlt 
+                    label='List Your Property' 
+                    href="/landlord-login"
+                    />
                   </div>
                 </div>
 

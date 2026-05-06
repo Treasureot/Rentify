@@ -82,9 +82,6 @@ const loginUser = async (e: React.FormEvent) => {
         <form onSubmit={loginUser}>  
           <h2>Welcome Back</h2>
           <p>Please enter your credentials to access your portal.</p>
-          <p style={{ marginTop: '12px' }}>
-            Login as a <a href="/tenant-login">Tenant <RiArrowRightLine size={24} /></a>
-          </p>
 
           <Input
             label="Email Address"

@@ -5,6 +5,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   width: 30%;
+  position: relative;
 }
 
 
@@ -205,4 +206,131 @@
 }
 }
 
+/* Lease card */
+.payment-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  width: 32%;
+  position: relative;
+
+  ButtonAlt {
+    background-color: #f0fff7;
+  }
+}
+
+.property-content
+.lease-price {
+  color: var(--primary);
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  
+.property-period {
+  color: #6b7280;
+  font-size: 16px;
+  font-weight: 400;
+  margin-left: 4px;
+  margin-bottom: 0px;
+
+}
+}
+
+.lease-status {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.lease-request-status {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #E5A000;
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+
+.divider {
+  height: 1px;
+  background-color: var(--border);
+  margin: 10px 0;
+}
+
+.property-tenant {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .tenant-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-h);
+    margin-bottom: 0;
+    margin-top: 0
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--text);
+  }
+}
+
+.message-content {
+
+  p {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  h4 {
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-h);
+    margin-bottom: 0;
+  }
+}
+
+.property-period {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text);
+
+  h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-h);
+    margin-bottom: 0;
+    margin-top: 0
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--text);
+  }
+}
 

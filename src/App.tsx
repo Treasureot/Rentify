@@ -8,6 +8,9 @@ import Contact from "./pages/Contact"
 import Landlord from "./pages/Landlord/Landlord";
 import LandlordProperty from "./pages/Landlord/LandlordProperty"
 import Tenant from "./pages/Tenants/Tenant"
+import LandlordPayment from "./pages/Landlord/LandlordPayment";
+import PaymentSchedule from "./pages/Landlord/PaymentSchedule";
+import LeaseRequests from "./pages/Landlord/LeaseRequests";
 
 
 
@@ -23,8 +26,10 @@ export default function App() {
       <Route path="/landlord" element={<Landlord />} />
       <Route path="/landlord-property" element={<LandlordProperty />} />
       <Route path="/tenant" element={<Tenant />} />
+      <Route path="/landlord-payment" element={<LandlordPayment />} />
+      <Route path="/payment-schedule/:leaseId" element={<PaymentSchedule/>} />
+      <Route path="/lease-requests" element={<LeaseRequests/>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
-

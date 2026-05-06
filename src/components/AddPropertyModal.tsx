@@ -5,6 +5,10 @@ import ButtonAlt from "../components/ButtonAlt";
 import React, { useState, useEffect, useCallback } from "react";
 
 
+const IMAGE_MAX_BYTES  = 2 * 1024 * 1024;
+const DESCRIPTION_MAX  = 2000;
+const TITLE_MAX        = 200;
+
 export interface Property {
     id: number;
     title: string;
@@ -12,7 +16,7 @@ export interface Property {
     type: string;
     rent: string;
     status: "Pending Approval" | "Approved" | "Pending" | "Rejected";
-    occupancystatus: "Occupied" | "Vacant";
+    occupancy: "Occupied" | "Vacant";
 }
 
 interface AddPropertyModalProps {
@@ -22,6 +26,12 @@ interface AddPropertyModalProps {
     property?: Property | null;
 }
 
+interface FormErrors {
+    title?:       string;
+    description?: string;
+    images?:      string;
+}
+
 function AddPropertyModal({ isOpen, onClose, onAdd, property }: AddPropertyModalProps) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -29,6 +39,7 @@ function AddPropertyModal({ isOpen, onClose, onAdd, property }: AddPropertyModal
     const [rent, setRent] = useState("");
     const [type, setType] = useState("");
     const [images, setImages] = useState<File[]>([]);
+    const [errors, setErrors] = useState<FormErrors>({});
 
     const resetForm = () => {
         setTitle("");
@@ -39,8 +50,59 @@ function AddPropertyModal({ isOpen, onClose, onAdd, property }: AddPropertyModal
         setImages([]);
     };
 
+    const validateTitle = (value: string): string | undefined => {
+        if (!value.trim()) return "Title is required.";
+        if (value.length > TITLE_MAX)
+            return `Title must be ${TITLE_MAX} characters or fewer (${value.length}/${TITLE_MAX}).`;
+    };
+ 
+    const validateDescription = (value: string): string | undefined => {
+        if (!value.trim()) return "Description is required.";
+        if (value.length > DESCRIPTION_MAX)
+            return `Description must be ${DESCRIPTION_MAX} characters or fewer (${value.length}/${DESCRIPTION_MAX}).`;
+    };
+ 
+    const validateImages = (files: File[]): string | undefined => {
+        const oversized = files.filter((f) => f.size > IMAGE_MAX_BYTES);
+        if (oversized.length > 0) {
+            const names = oversized.map((f) => f.name).join(", ");
+            return `These files exceed 2 MB: ${names}`;
+        }
+    };
+
+
+    // handler validation
+
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setTitle(value);
+        setErrors((prev) => ({ ...prev, title: validateTitle(value) }));
+    };
+ 
+    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const value = e.target.value;
+        setDescription(value);
+        setErrors((prev) => ({ ...prev, description: validateDescription(value) }));
+    };
+ 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return;
+        const files = Array.from(e.target.files);
+        setImages(files);
+        setErrors((prev) => ({ ...prev, images: validateImages(files) }));
+    };
+
+
+    // handle submit
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        const newErrors: FormErrors = {
+            title:       validateTitle(title),
+            description: validateDescription(description),
+            images:      validateImages(images),
+        };
 
         const newProperty: Property = {
             id: property?.id ?? Date.now(),
@@ -49,7 +111,7 @@ function AddPropertyModal({ isOpen, onClose, onAdd, property }: AddPropertyModal
             type,
             rent: `₦${Number(rent).toLocaleString()}/year`,
             status: property?.status ?? "Pending Approval",
-            occupancystatus: property?.occupancystatus ?? "Vacant",
+            occupancy: property?.occupancy ?? "Vacant",
         };
 
         resetForm();
@@ -57,11 +119,6 @@ function AddPropertyModal({ isOpen, onClose, onAdd, property }: AddPropertyModal
         onAdd(newProperty);
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setImages(Array.from(e.target.files));
-        }
-    };
 
     const handleEsc = useCallback(
         (e: KeyboardEvent) => {
@@ -88,14 +145,26 @@ function AddPropertyModal({ isOpen, onClose, onAdd, property }: AddPropertyModal
                 <div className="modal_body">
                     <form className="modal_form" onSubmit={handleSubmit}>
 
-                        <Input
-                            label="Property Title"
-                            type="text"
-                            placeholder="e.g Mini Flat in Yaba"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                        />
+                        <div className="input_group">
+                            <Input
+                                label="Property Title"
+                                type="text"
+                                placeholder="e.g Mini Flat in Yaba"
+                                value={title}
+                                onChange={handleTitleChange}
+                                required
+                            />
+
+                            <div className="input_meta">
+                                {errors.title ? (
+                                    <span className="input_error">{errors.title}</span>
+                                ) : (
+                                    <span className="input_count">
+                                        {title.length}/{TITLE_MAX}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
 
                         <div className="input_group">
                             <label>Description</label>
@@ -105,6 +174,16 @@ function AddPropertyModal({ isOpen, onClose, onAdd, property }: AddPropertyModal
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />
+
+                            <div className="input_meta">
+                                {errors.description ? (
+                                    <span className="input_error">{errors.description}</span>
+                                ) : (
+                                    <span className="input_count">
+                                        {description.length}/{DESCRIPTION_MAX}
+                                    </span>
+                                )}
+                            </div>
                         </div>
 
                         <div className="input_body">
@@ -143,8 +222,30 @@ function AddPropertyModal({ isOpen, onClose, onAdd, property }: AddPropertyModal
                         </div>
 
                         <div className="input_group">
-                            <label>Upload Images</label>
-                            <input type="file" multiple onChange={handleFileChange} />
+                            <label>Upload Images <span className="input_hint">Max 2 MB per image</span> </label>
+                            <input 
+                            type="file" 
+                            multiple 
+                            onChange={handleFileChange}
+                            accept="image/*"
+                            />
+
+                            {errors.images && (
+                                <span className="input_error">{errors.images}</span>
+                            )}
+
+                            {images.length > 0 && !errors.images && (
+                                <ul className="image_preview_list">
+                                    {images.map((f) => (
+                                        <li key={f.name} className="image_preview_item">
+                                            ✓ {f.name}{" "}
+                                            <span className="input_count">
+                                                ({(f.size / (1024 * 1024)).toFixed(2)} MB)
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </div>
 
                         <div className="modal_actions">

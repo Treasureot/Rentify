@@ -33,14 +33,14 @@ const Landlord = () => {
                     <div className="landlord_metrics">
                         <div className="revenue_metrics">
                             <RevenueCard 
-                            label='TOTAL REVENUE'
+                            label='TOTAL RENT'
                             TotalRevenue= {4500000}
                             />
                         </div>
 
                         <div className="default_metrics">
                             <DefaultCard 
-                            label= 'TOTAL PROPERTIES'
+                            label= 'OCCUPIED PROPERTIES'
                             TotalValue= {8}
                             bgColor='#F0FFF7'
                             colorText='var(--primary)'
@@ -49,7 +49,16 @@ const Landlord = () => {
 
                         <div className="default_metrics">
                             <DefaultCard 
-                            label= 'OVERDUE PAYMENTS'
+                            label= 'PENDING APPROVALS'
+                            TotalValue= {4}
+                            bgColor='#FFF9E5'
+                            colorText='#E5A000'
+                            />
+                        </div>
+
+                        <div className="default_metrics">
+                            <DefaultCard 
+                            label= 'VACANT PROPERTIES'
                             TotalValue= {2}
                             bgColor='#F9F3F4'
                             colorText='#BA1A1A'
@@ -57,6 +66,42 @@ const Landlord = () => {
                         </div>
 
                         <div className="default_metrics">
+                            <DefaultCard 
+                            label= 'TOTAL USERS'
+                            TotalValue= {50}
+                            bgColor='#F2F4F6'
+                            colorText='var(--text-h)'
+                            />
+                        </div>
+
+                        <div className="default_metrics">
+                            <DefaultCard 
+                            label= 'TOTAL PROPERTIES'
+                            TotalValue= {10}
+                            bgColor='#F2F4F6'
+                            colorText='var(--text-h)'
+                            />
+                        </div>
+
+                        <div className="default_metrics">
+                            <DefaultCard 
+                            label= 'OVERDUE PAYMENT'
+                            TotalValue= {150000}
+                            bgColor='#F2F4F6'
+                            colorText='var(--text-h)'
+                            />
+                        </div>
+
+                        <div className="default_metrics">
+                            <DefaultCard 
+                            label= 'OVERDUE COUNT'
+                            TotalValue= {1}
+                            bgColor='#F2F4F6'
+                            colorText='var(--text-h)'
+                            />
+                        </div>
+
+                        {/* <div className="default_metrics">
                             <OccupancyCard
                             label= 'OCCUPANCY STATUS'
                             occupied={5}
@@ -64,25 +109,25 @@ const Landlord = () => {
                             bgColor='#F2F4F6'
                             colorText='var(--text-h)'
                             />
-                        </div> 
+                        </div>  */}
 
-                        <div className="default_metrics">
+                        {/* <div className="default_metrics">
                             <ManagementCard 
                             label='MANAGEMENT TOOLS'
                             bgColor='#F2F4F6'
                             colorText='var(--text-h)'
                             leaseNumber={3}
                             />
-                        </div>
+                        </div> */}
                         
-                        <div className="default_metrics">
+                        {/* <div className="default_metrics">
                             <div className="insight_card">
                                 <h3>View Analytics Insights</h3>
                                 <div className="insight_icon">
                                     <a href="/insight"><FaArrowRight /></a>
                                 </div>
                             </div>
-                        </div>                                                                            
+                        </div>                                                                             */}
                     </div>
 
                     <div className="recent_activities">

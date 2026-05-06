@@ -1,27 +1,39 @@
+// SuccessModal.tsx
 import "../Styles/Cards.css";
 import SuccessImg from "../assets/images/firework.png";
-import React from "react";
+import { useNavigate } from "react-router-dom";
 
 type SuccessModalProps = {
     title: string;
     message: string;
     path: string;
     label: string;
-    isOpen: boolean;     
+    isOpen: boolean;
     onClose: () => void;
+    onDone?: () => void;
 };
 
-const SuccessModal = ({ 
-    title, 
-    message, 
-    path, 
+const SuccessModal = ({
+    title,
+    message,
+    path,
     label,
     isOpen,
-    onClose 
+    onClose,
+    onDone,
 }: SuccessModalProps) => {
-     if (!isOpen) return null; 
+    const navigate = useNavigate();
+
+    if (!isOpen) return null;
+
+    const handleDone = () => {
+        onClose();
+        onDone?.();
+        if (path) navigate(path);
+    };
+
     return (
-        <div className="modal_overlay" onClick={onClose}>
+        <div className="modal_overlay" onClick={handleDone}>
             <div className="success_modal" onClick={(e) => e.stopPropagation()}>
                 <div className="success_img">
                     <img src={SuccessImg} alt="Success" />
@@ -29,11 +41,9 @@ const SuccessModal = ({
                 <h3>{title}</h3>
                 <p>{message}</p>
                 <div className="modal_action">
-                    <a href={path}>  
-                        <button className="btn_primary">
-                            {label}
-                        </button>
-                    </a>
+                    <button className="btn_primary" onClick={handleDone}>
+                        {label}
+                    </button>
                 </div>
             </div>
         </div>

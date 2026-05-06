@@ -15,8 +15,8 @@ const RevenueCard = ({
         <>
         <div className="revenue_card">
             <div className="revenue_card_details">
-                <p style={{ fontSize: '12px', fontWeight: '600', color: 'var(--primary)', letterSpacing:'3px'}}>{label}</p>
-                <div className="revenue_details" style={{color: 'var(--text-h)'}}>
+                <p style={{ fontSize: '12px', fontWeight: '600', color: 'var(--bg)', letterSpacing:'3px'}}>{label}</p>
+                <div className="revenue_details" style={{color: 'var(--bg)'}}>
                     <span><FaNairaSign /></span>
                     <h3>{TotalRevenue}</h3>
                 </div>

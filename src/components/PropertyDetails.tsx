@@ -3,12 +3,13 @@ import { FaBed, FaBath } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { FiX } from "react-icons/fi";
 import ImageCard from "../assets/images/card-1.png"
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 type PropertyDetailsProps = {
     image: string;
     id: number;
     status?: string;
+    occupancy: string;
     price: string;
     period?: string;
     title: string;
@@ -25,6 +26,7 @@ const PropertyDetails = ({
     image,
     id,
     status = "AVAILABLE",
+    occupancy = "Vacant",
     price,
     period = "year",
     title,
@@ -50,7 +52,7 @@ const PropertyDetails = ({
     }, []);
 
     return (
-        <div className="property-card">
+        <div className="property-card" style={{width: "100%"}}>
             <button
                 className="property_details_close"
                 onClick={onViewDetails}
@@ -92,12 +94,6 @@ const PropertyDetails = ({
                 </div>
 
                 <div className="actions_group" ref={actionRef}>
-                    <button
-                        className="action_btn"
-                    >   
-                    </button>
-
-                    {showActions && (
                         <div className="dropdown_menu">
                             <button className="btn_secondary" onClick={() => {
                                 onDelete(id);
@@ -113,7 +109,6 @@ const PropertyDetails = ({
                                 Edit
                             </button>                            
                         </div>
-                    )}
                 </div>
 
             </div>

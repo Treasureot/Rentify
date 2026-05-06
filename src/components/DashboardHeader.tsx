@@ -15,21 +15,11 @@ const DashboardHeader = ({
     profileIcon
 }: DashboardHeaderProps) => {
 
-    const [displayFirstName, setDisplayFirstName] = useState(firstName);
-    const [displayLastName, setDisplayLastName] = useState(lastName);
 
-    useEffect(() => {
-        const storedFirst = localStorage.getItem("firstName");
-        const storedLast  = localStorage.getItem("lastName");
-
-        if (storedFirst) setDisplayFirstName(storedFirst);
-        if (storedLast)  setDisplayLastName(storedLast);
-        
-    }, []);
     return (
         <div className="dashboard_header">
             <div className="dashboard_header_left">
-                <h2>Welcome Back, {displayFirstName} 👋</h2>
+                <h2>Welcome Back, {firstName} 👋</h2>
                 <p>Here is what is happening with your portfolio today.</p>
             </div>
 
@@ -41,9 +31,9 @@ const DashboardHeader = ({
                 <div className="profile_icon">
                     <img
                         src={profileIcon || "/default-avatar.png"}
-                        alt={`${displayFirstName} ${displayLastName} profile`}
+                        alt={`${firstName} ${lastName} profile`}
                     />
-                    <span className="profile_name">{displayFirstName} {displayLastName}</span>
+                    <span className="profile_name">{firstName} {lastName}</span>
                     <FiChevronDown size={20} />
                 </div>
             </div>
