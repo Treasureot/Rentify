@@ -4,6 +4,7 @@ import DashboardHeader from "../../components/DashboardHeader";
 import Button from "../../components/Button";
 import ScheduleTable from "../../components/ScheduleTable";
 import { useNavigate, useParams } from "react-router-dom";
+import ButtonAlt from "../../components/ButtonAlt";
 
 const PaymentSchedule = () => {
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ const PaymentSchedule = () => {
                             <h3>Payment Schedule</h3>
                             <p>Lease #{leaseId}</p>
                         </div>
-                        <div className="landlord_property_header_right">
+                        <div className="landlord_property_header_right">              
                             <Button
                                 label="Back"
                                 onClick={() => navigate("/landlord-payment")}

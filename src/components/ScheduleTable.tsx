@@ -1,5 +1,9 @@
-import "../Styles/Cards.css"
-
+import "../Styles/Cards.css";
+import { useState } from "react";
+import ApprovalModal from "./ApprovalModal";
+import SuccessModal from "./SuccessModal";
+import RejectModal from "./RejectModal";
+import RejectedModal from "./SuccessModal";
 
 type ScheduleItem = {
     id: string;
@@ -39,12 +43,84 @@ const formatDate = (dateStr: string) =>
 
 type ScheduleTableProps = {
     schedules?: ScheduleItem[];
+    onPayment?: (item: ScheduleItem) => void;
 };
 
-const ScheduleTable = ({ schedules = SAMPLE_SCHEDULES }: ScheduleTableProps) => {
+const ScheduleTable = ({
+    schedules: initialSchedules = SAMPLE_SCHEDULES,
+    onPayment,
+}: ScheduleTableProps) => {
+    const [schedules, setSchedules] = useState<ScheduleItem[]>(initialSchedules);
+    const [openActionId, setOpenActionId] = useState<string | null>(null);
+    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+    const [openApprovalModal, setOpenApprovalModal] = useState(false);
+    const [openSuccessModal, setOpenSuccessModal] = useState(false);
+    const [openRejectModal, setOpenRejectModal] = useState(false);
+    const [openRejectedModal, setOpenRejectedModal] = useState(false);
+
     const totalDue     = schedules.reduce((sum, s) => sum + s.amountDue, 0);
     const totalPaid    = schedules.reduce((sum, s) => sum + s.amountPaid, 0);
     const totalBalance = schedules.reduce((sum, s) => sum + s.balanceDue, 0);
+
+    const toggleAction = (id: string) => {
+        setOpenActionId((prev) => (prev === id ? null : id));
+    };
+
+    const updateStatus = (
+        id: string, 
+        status: ScheduleItem["status"]) => {
+        setSchedules((prev) =>
+            prev.map((s) => {
+                if (s.id !== id) return s;
+                if (status === "Paid") {
+                    return { ...s, status, amountPaid: s.amountDue, balanceDue: 0 };
+                }
+                if (status === "Pending") {
+                    return { ...s, status, amountPaid: 0, balanceDue: s.amountDue };
+                }
+                return { ...s, status };
+            })
+        );
+    };
+
+    const handleOpenConfirm = (item: ScheduleItem) => {
+        setSelectedItemId(item.id);
+        setOpenActionId(null);
+        setOpenApprovalModal(true);
+    };
+
+    const handleOpenReject = (item: ScheduleItem) => {
+        setSelectedItemId(item.id);
+        setOpenActionId(null);
+        setOpenRejectModal(true);
+    };
+
+    const handleApprovalConfirm = () => {
+        setOpenApprovalModal(false);
+        setOpenSuccessModal(true);
+    };
+
+    const handleSuccessDone = () => {
+        if (selectedItemId) {
+            updateStatus(selectedItemId, "Paid");
+            const item = schedules.find((s) => s.id === selectedItemId);
+            if (item) onPayment?.(item);
+        }
+        setOpenSuccessModal(false);
+        setSelectedItemId(null);
+    };
+
+    const handleRejectConfirm = (reason: string) => {
+        console.log("Rejection reason:", reason);
+        setOpenRejectModal(false);
+        setOpenRejectedModal(true);
+    };
+
+    const handleRejectedDone = () => {
+        if (selectedItemId) updateStatus(selectedItemId, "Pending");
+        setOpenRejectedModal(false);
+        setSelectedItemId(null);
+    };
 
     return (
         <>
@@ -67,7 +143,6 @@ const ScheduleTable = ({ schedules = SAMPLE_SCHEDULES }: ScheduleTableProps) => 
                 </div>
             </div>
 
-
             <div className="schedule_table_wrapper">
                 <table className="schedule_table">
                     <thead>
@@ -78,6 +153,7 @@ const ScheduleTable = ({ schedules = SAMPLE_SCHEDULES }: ScheduleTableProps) => 
                             <th>Amount Paid</th>
                             <th>Balance Due</th>
                             <th>Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,11 +169,71 @@ const ScheduleTable = ({ schedules = SAMPLE_SCHEDULES }: ScheduleTableProps) => 
                                         {item.status}
                                     </span>
                                 </td>
+                                <td className="actions_group">
+                                    {(item.status === "Pending" || item.status === "Overdue" || item.status === "Partial") && (
+                                        <div className="action_body">
+                                            <button
+                                                className="action_btn"
+                                                onClick={() => toggleAction(item.id)}
+                                            >
+                                                ⋮
+                                            </button>
+                                            {openActionId === item.id && (
+                                                <div className="dropdown_menu">
+                                                    <button onClick={() => handleOpenConfirm(item)}>
+                                                        Confirm Payment
+                                                    </button>
+                                                    <button onClick={() => handleOpenReject(item)}>
+                                                        Reject Payment
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            <ApprovalModal
+                title="Confirm Payment"
+                approvalMessage="Are you sure you want to confirm this payment?"
+                isOpen={openApprovalModal}
+                onClose={() => setOpenApprovalModal(false)}
+                onConfirm={handleApprovalConfirm}
+                label="Proceed"
+                labelAlt="Cancel"
+            />
+
+            <SuccessModal
+                title="Payment Confirmed"
+                message="You have successfully confirmed this payment. Tenant notified"
+                label="Done"
+                path=""
+                isOpen={openSuccessModal}
+                onClose={() => setOpenSuccessModal(false)}
+                onDone={handleSuccessDone}
+            />
+
+            <RejectModal
+                title="Reject Payment"
+                message="Are you sure you want to reject this payment?"
+                label="Reject"
+                isOpen={openRejectModal}
+                onClose={() => setOpenRejectModal(false)}
+                onConfirm={handleRejectConfirm}
+            />
+
+            <RejectedModal
+                title="Payment Rejected"
+                message="You have successfully rejected this payment. Tenant notified"
+                label="Done"
+                path=""
+                isOpen={openRejectedModal}
+                onClose={handleRejectedDone}
+            />
         </>
     );
 };

@@ -7,7 +7,7 @@ type InputProps = {
     type?: string;
     value: string;
     required?: boolean;
-    placeholder: string;
+    placeholder?: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 

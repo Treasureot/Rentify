@@ -8,7 +8,21 @@ import ApprovalModal from "./ApprovalModal";
 import SuccessModal from "./SuccessModal";
 import RejectModal from "./RejectModal";
 import RejectedModal from "./SuccessModal";
+import CreateLeaseModal from "./CreateLeaseModal";
 import { useState } from "react";
+
+export type LeaseData = {
+  leaseId: number;
+  tenantName: string;
+  tenantPhone: string;
+  propertyTitle: string;
+  PropertyAddress: string;
+  propertyRentAmount: string;
+  period: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+};
 
 type LeaseCardProps = {
   id: number;
@@ -25,6 +39,7 @@ type LeaseCardProps = {
   message: string;
   createdDate: string;
   onDelete?: (leaseId: number) => void;
+  onLeaseCreated?: () => void;
 };
 
 const LeaseCard = ({
@@ -36,21 +51,20 @@ const LeaseCard = ({
   propertyTitle,
   PropertyAddress,
   tenantId,
-  tenantEmail,
   tenantName,
   tenantPhone,
   message,
   createdDate,
   onDelete,
+  onLeaseCreated,
 }: LeaseCardProps) => {
   const [openApprovalModal, setOpenApprovalModal] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [openRejectModal, setOpenRejectModal] = useState(false);
   const [openRejectedModal, setOpenRejectedModal] = useState(false);
+  const [openCreateLeaseModal, setOpenCreateLeaseModal] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-
-  const handleApprove = () => setOpenApprovalModal(true);
 
   const handleApprovalConfirm = () => {
     setOpenApprovalModal(false);
@@ -62,8 +76,6 @@ const LeaseCard = ({
     setIsApproved(true);
   };
 
-  const handleReject = () => setOpenRejectModal(true);
-
   const handleRejectConfirm = (reason: string) => {
     console.log("Rejection reason:", reason);
     setOpenRejectModal(false);
@@ -74,6 +86,11 @@ const LeaseCard = ({
     setOpenRejectedModal(false);
     setIsVisible(false);
     onDelete?.(leaseId);
+  };
+
+  const handleCreateLease = () => {
+    onLeaseCreated?.();
+    setOpenCreateLeaseModal(false);
   };
 
   if (!isVisible) return null;
@@ -127,12 +144,12 @@ const LeaseCard = ({
             <Button
               label="Create Lease"
               className="btn_create_lease"
-              onClick={() => console.log("Navigate to create lease for leaseId:", leaseId)}
+              onClick={() => setOpenCreateLeaseModal(true)}
             />
           ) : (
             <>
-              <ButtonAlt label="Reject" onClick={handleReject} />
-              <Button label="Approve" onClick={handleApprove} />
+              <ButtonAlt label="Reject" onClick={() => setOpenRejectModal(true)} />
+              <Button label="Approve" onClick={() => setOpenApprovalModal(true)} />
             </>
           )}
         </div>
@@ -144,6 +161,8 @@ const LeaseCard = ({
         isOpen={openApprovalModal}
         onClose={() => setOpenApprovalModal(false)}
         onConfirm={handleApprovalConfirm}
+        label="Approve Request"
+        labelAlt="Cancel"
       />
 
       <SuccessModal
@@ -153,7 +172,7 @@ const LeaseCard = ({
         path=""
         isOpen={openSuccessModal}
         onClose={() => setOpenSuccessModal(false)}
-        onDone={() => setIsApproved(true)}
+        onDone={handleSuccessDone}
       />
 
       <RejectModal
@@ -173,6 +192,18 @@ const LeaseCard = ({
         isOpen={openRejectedModal}
         onClose={handleRejectedDone}
       />
+
+      <CreateLeaseModal
+        propertyId={id}
+        tenantId={tenantId}
+        isOpen={openCreateLeaseModal}
+        onClose={() => setOpenCreateLeaseModal(false)}
+        onLeaseCreated={handleCreateLease} 
+        leaseId={0} 
+        startDate={""} 
+        endDate={""} 
+        rentAmount={""}      
+        />
     </div>
   );
 };

@@ -5,7 +5,9 @@ import Button from "./Button";
 type ApprovalModalProps = {
     title: string;
     approvalMessage: string;
-    isOpen: boolean;     
+    isOpen: boolean;   
+    label: string;  
+    labelAlt: string;
     onClose: () => void;
     onConfirm: () => void;
 };
@@ -14,6 +16,8 @@ const ApprovalModal = ({
     title,
     approvalMessage,
     isOpen,
+    label,
+    labelAlt,
     onClose,
     onConfirm
 }: ApprovalModalProps) => {
@@ -31,12 +35,12 @@ const ApprovalModal = ({
 
                     <div className="modal_actions">
                         <ButtonAlt 
-                        label="cancel"
+                        label={labelAlt}
                         onClick={onClose}
                         />
 
                         <Button 
-                        label="Approve Request"
+                        label={label}
                         onClick={onConfirm}
                         />
                     </div>
