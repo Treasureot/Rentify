@@ -1,6 +1,6 @@
-import "../styles/Cards.css"
 import ButtonAlt from "./ButtonAlt";
 import Button from "./Button";
+import "../styles/Cards.css"
 
 type ApprovalModalProps = {
     title: string;
