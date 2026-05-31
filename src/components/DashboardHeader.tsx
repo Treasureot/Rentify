@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { FiChevronDown } from "react-icons/fi";
-import "../Styles/index.css"
+import "../Styles/cards.css"
 
 type DashboardHeaderProps = {
     firstName: string;
