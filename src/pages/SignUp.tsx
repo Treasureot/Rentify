@@ -17,69 +17,88 @@ function SignUp() {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-  
- 
-const passwordCriteria = [
-    { label: 'At least 8 characters', met: password.length >= 8 },
-    { label: 'At least one uppercase letter', met: /[A-Z]/.test(password) },
-    { label: 'At least one lowercase letter', met: /[a-z]/.test(password) },
-    { label: 'At least one number', met: /[0-9]/.test(password) },
-    { label: 'At least one special character (!@#$%^&*)', met: /[!@#$%^&*]/.test(password) },
-];
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
 
-const allCriteriaMet = passwordCriteria.every(c => c.met);
+    const passwordCriteria = [
+        { label: 'At least 8 characters', met: password.length >= 8 },
+        { label: 'At least one uppercase letter', met: /[A-Z]/.test(password) },
+        { label: 'At least one lowercase letter', met: /[a-z]/.test(password) },
+        { label: 'At least one number', met: /[0-9]/.test(password) },
+        { label: 'At least one special character (!@#$%^&*)', met: /[!@#$%^&*]/.test(password) },
+    ];
 
+    const allCriteriaMet = passwordCriteria.every(c => c.met);
 
-const createUser = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError('');
+    const createUser = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setFieldErrors({});
 
-    if (!allCriteriaMet) {
-        setError('Please meet all password requirements.');
-        return;
-    }
-
-    if (password !== confirmPassword) {
-        setError('Passwords do not match');
-        return;
-    }
-
-    setIsLoading(true);
-
-    try {
-        const request = await fetch(
-            `https://propms-api.fly.dev/api/v1/Auth/register`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    firstName,
-                    lastName,
-                    email,
-                    phoneNumber,
-                    role,
-                    password,
-                }),
-            }
-        );
-
-        const response = await request.json();
-        console.log(response, "response");
-
-        if (request.ok) {
-            setShowSuccessModal(true);
-        } else {
-            setError(response.message || 'Sign up failed. Please try again.');
+        if (!allCriteriaMet) {
+            setError('Please meet all password requirements.');
+            return;
         }
 
-    } catch (error) {
-        setError('Network error. Please check your connection.');
-    } finally {
-        setIsLoading(false);
-    }
-};
+        if (password !== confirmPassword) {
+            setError('Passwords do not match.');
+            return;
+        }
+
+        if (!role) {
+            setError('Please select a role.');
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            const request = await fetch(
+                `https://propms-api.fly.dev/api/v1/Auth/register`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        firstName,
+                        lastName,
+                        email,
+                        phoneNumber,
+                        role,     
+                        password,
+                    }),
+                }
+            );
+
+            const response = await request.json();
+
+            if (request.ok && response.success) {
+
+                setShowSuccessModal(true);
+            } else if (response.errors && typeof response.errors === 'object' && !Array.isArray(response.errors)) {
+
+                setFieldErrors(response.errors as Record<string, string[]>);
+                setError(response.title || 'One or more validation errors occurred.');
+            } else if (Array.isArray(response.errors) && response.errors.length > 0) {
+                setError(response.errors.join(' '));
+            } else {
+                setError(response.message || 'Sign up failed. Please try again.');
+            }
+
+        } catch (err) {
+            setError('Network error. Please check your connection.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
+    const flatFieldErrors = Object.entries(fieldErrors)
+        .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
+        .join(' | ');
+
+ 
+    const loginPath = role === 'Tenant' ? '/login' : role === 'Landlord' ? '/login' : '/login';
 
     return (
         <div className="register_content">
@@ -88,8 +107,8 @@ const createUser = async (e: React.FormEvent) => {
             </div>
 
             <div className="login_content_right">
-                <form onSubmit={createUser}>  
-                    <h2>Create an account</h2>  
+                <form onSubmit={createUser}>
+                    <h2>Create an account</h2>
                     <p>Experience the new standard in property management.</p>
 
                     <div className="input_body">
@@ -123,7 +142,7 @@ const createUser = async (e: React.FormEvent) => {
                     <div className="input_body">
                         <Input
                             label="Phone Number"
-                            type="tel"  
+                            type="tel"
                             value={phoneNumber}
                             placeholder="e.g 090 *** ****"
                             onChange={(e) => setPhoneNumber(e.target.value)}
@@ -131,10 +150,15 @@ const createUser = async (e: React.FormEvent) => {
 
                         <div className="input_group">
                             <label>Select Role:</label>
-                            <select value={role} onChange={(e) => setRole(e.target.value)}>
+                            <select
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                                required
+                            >
                                 <option value="">Select</option>
-                                <option value="landlord">Landlord</option>
-                                <option value="tenant">Tenant</option>
+
+                                <option value="Landlord">Landlord</option>
+                                <option value="Tenant">Tenant</option>
                             </select>
                         </div>
                     </div>
@@ -145,16 +169,17 @@ const createUser = async (e: React.FormEvent) => {
                         value={password}
                         placeholder="*******"
                         onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
-                    
+
                     {password.length > 0 && (
-                    <div className="password_criteria">
-                      {passwordCriteria.map((criteria, index) => (
-                        <p key={index} className={criteria.met ? 'criteria_met' : 'criteria_unmet'}>
-                          {criteria.met ? '✓' : '✗'} {criteria.label}
-                        </p>
-                    ))}
-                    </div>
+                        <div className="password_criteria">
+                            {passwordCriteria.map((criteria, index) => (
+                                <p key={index} className={criteria.met ? 'criteria_met' : 'criteria_unmet'}>
+                                    {criteria.met ? '✓' : '✗'} {criteria.label}
+                                </p>
+                            ))}
+                        </div>
                     )}
 
                     <Input
@@ -163,39 +188,48 @@ const createUser = async (e: React.FormEvent) => {
                         value={confirmPassword}
                         placeholder="*******"
                         onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
                     />
 
                     {confirmPassword.length > 0 && password !== confirmPassword && (
                         <p style={{ color: 'red', fontSize: '13px', marginTop: '-16px' }}>
-                        !Passwords do not match
-                    </p>
+                            Passwords do not match.
+                        </p>
                     )}
+
 
                     {error && (
-                      <p style={{ color: 'red', fontSize: '14px', marginBottom: '8px' }}>
-                          {error}
-                      </p>
+                        <p style={{ color: 'red', fontSize: '14px', marginBottom: '4px' }}>
+                            {error}
+                        </p>
                     )}
 
-                    <Button 
-                    label={isLoading ? "Creating Account..." : "Create Account"} 
-                    type="submit"
-                    disabled={isLoading} 
-                    />  
+
+                    {flatFieldErrors && (
+                        <p style={{ color: 'red', fontSize: '13px', marginBottom: '8px' }}>
+                            {flatFieldErrors}
+                        </p>
+                    )}
+
+                    <Button
+                        label={isLoading ? "Creating Account..." : "Create Account"}
+                        type="submit"
+                        disabled={isLoading}
+                    />
 
                     <p style={{ textAlign: 'center' }}>
-                        Already have an account? <a href="/tenant-login">Login</a>
+                        Already have an account? <a href="/login">Login</a>
                     </p>
                 </form>
             </div>
 
             <SuccessModal
-             title="Sign Up Successful"
-             message="Your account has been created successfully. Login to access your dashboard"
-             path="/landlord-login"
-             label="Go to Login"
-             onClose={() => setShowSuccessModal(false)}
-             isOpen={showSuccessModal}
+                title="Sign Up Successful"
+                message="Your account has been created successfully. Login to access your dashboard."
+                path={loginPath}
+                label="Go to Login"
+                onClose={() => setShowSuccessModal(false)}
+                isOpen={showSuccessModal}
             />
         </div>
     );

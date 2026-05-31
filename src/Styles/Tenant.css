@@ -1,40 +1,41 @@
 .tenant_header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 80px;
-  max-width: 90%;
-  margin: 0 auto;
-  background-color: var(--bg);
-  border-bottom: 0.5px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    max-width: 90%;
+    margin: 0 auto;
+    background-color: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+}
 
-  .tenant_header_left {
+.tenant_header_left {
     display: flex;
     align-items: center;
     gap: 40px;
-  }
+}
 
-  img {
+.tenant_header img {
     width: 100px;
     height: auto;
-  }
+}
 
-  ul {
+.tenant_header ul {
     display: flex;
-    flex-direction: row; 
+    flex-direction: row;
     align-items: center;
     gap: 24px;
     list-style: none;
     margin: 0;
     padding: 0;
-  }
+}
 
-  ul li {
-    display: inline-flex; 
+.tenant_header ul li {
+    display: inline-flex;
     align-items: center;
-  }
+}
 
-  ul li a {
+.tenant_header ul li a {
     display: inline-block;
     color: var(--bodytext);
     text-decoration: none;
@@ -43,71 +44,72 @@
     line-height: 24px;
     letter-spacing: -0.4px;
     transition: color 0.3s ease;
-  }
+}
 
-  ul li a:hover {
+.tenant_header ul li a:hover {
     color: var(--primary);
-  }
+}
 
-  .active {
+.tenant_header .active {
     color: var(--primary);
     border-bottom: 1px solid var(--primary);
     padding-bottom: 4px;
-  }
+}
 
-  #getStarted {
+.tenant_header #getStarted {
     padding: 8px 16px;
     border-radius: 8px;
     background-color: var(--primary);
     color: #fff;
-  }
+}
 
 .tenant_header_right {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 24px;
-
-        .notification_icon {
-            background-color: #f0fff7;
-            display: inline-flex;
-            width: 40px;
-            height: 40px;
-            align-items: center;
-            justify-content: center;
-            border-radius: 100%;
-            color: var(--primary);
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .profile_icon {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            overflow: visible;
-
-            img {
-                width: 36px;
-                height: 36px;
-                min-width: 36px;
-                border-radius: 50%;
-                object-fit: cover;
-                background-color: #f7f7f7;
-                display: block;
-            }
-
-            .profile_name {
-                font-size: 14px;
-                font-weight: 600;
-                line-height: 1;
-                color: var(--text-h);
-                white-space: nowrap;
-            }
-        }    
-}  
 }
+
+.tenant_header_right .notification_icon {
+    background-color: #f0fff7;
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    color: var(--primary);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.tenant_header_right .profile_icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    overflow: visible;
+}
+
+.tenant_header_right .profile_icon img {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #f7f7f7;
+    display: block;
+}
+
+.tenant_header_right .profile_icon .profile_name {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--text-h);
+    white-space: nowrap;
+}
+
+/* Sidebar */
 
 .tenant_sidebar {
     background-color: #F2F4F6;
@@ -116,6 +118,1456 @@
     max-width: 300px;
     min-height: 100vh;
     position: fixed;
-
+    top: 80px;
+    left: 0;
+    z-index: 99;
+    overflow-y: auto;
 }
 
+/* Tenant */
+
+.tenant {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #ffffff;
+}
+
+.tenant .tenant_top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: var(--bg);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+
+
+.tenant_bottom {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    margin-top: 80px;
+    min-height: calc(100vh - 80px);
+}
+
+.tenant_body_right {
+    margin-left: 300px;
+    flex: 1;
+    padding: 32px 28px;
+    min-width: 0;
+}
+
+
+.tenant_body_right .tenant_header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 28px;
+    height: auto;
+    max-width: 100%;
+    border-bottom: none;
+}
+
+.tenant_body_right .tenant_header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-h);
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+.tenant_body_right .tenant_header p {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.55;
+    max-width: 560px;
+}
+
+/* ---- Listings ---- */
+.tenant_body_listings {
+    width: 100%;
+}
+
+.tenant_property {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+
+.tenant__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 36px;
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+}
+
+.tenant__pagination-info {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.tenant__pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tenant__pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: var(--bodytext);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.tenant__pagination-btn:hover:not(:disabled) {
+    background-color: #f0fff7;
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.tenant__pagination-btn--active {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.tenant__pagination-btn--active:hover {
+    background-color: #16a34a;
+    border-color: #16a34a;
+    color: #ffffff;
+}
+
+.tenant__pagination-btn--nav {
+    font-size: 1.25rem;
+    line-height: 1;
+    color: #6b7280;
+}
+
+.tenant__pagination-btn--nav:hover:not(:disabled) {
+    color: var(--primary);
+}
+
+.tenant__pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.tenant__pagination-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 38px;
+    color: #9ca3af;
+    font-size: 0.9rem;
+    user-select: none;
+}
+
+/* =========================================
+   PROPERTY DETAILS PAGE
+   ========================================= */
+
+.property-details__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 24px;
+    transition: opacity 0.2s ease;
+}
+
+.property-details__back:hover {
+    opacity: 0.75;
+}
+
+/* Two-column layout: details left, landlord right */
+.property-details__layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.property-details {
+    flex: 1;
+    min-width: 0;
+    background-color: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+}
+
+.property-details__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-h);
+    margin: 0 0 6px 0;
+    letter-spacing: -0.3px;
+}
+
+.property-details__price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 8px 0;
+}
+
+.property-details__price span {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #6b7280;
+}
+
+.property-details__location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0 0 16px 0;
+}
+
+.property-details__meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.property-details__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--bodytext);
+    background-color: #f5f6fa;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+/* ---- Landlord panel ---- */
+.property_landlord {
+    width: 300px;
+    flex-shrink: 0;
+    background-color: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 100px; /* clears fixed header */
+}
+
+.landlord_info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-h);
+    margin: 0 0 20px 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.landlord_group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 16px;
+}
+
+.landlord_group:last-child {
+    margin-bottom: 0;
+}
+
+.landlord_label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.landlord_value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-h);
+    margin: 0;
+    word-break: break-word;
+}
+
+/* ---- Not found ---- */
+.property-details__not-found {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+}
+
+.property-details__not-found h2 {
+    font-size: 1.4rem;
+    color: var(--text-h);
+    margin-bottom: 8px;
+}
+
+
+
+@media (max-width: 1024px) {
+    .tenant_sidebar {
+        width: 220px;
+        max-width: 220px;
+    }
+
+    .tenant_body_right {
+        margin-left: 220px;
+        padding: 24px 20px;
+    }
+
+    .tenant_property {
+        gap: 18px;
+    }
+
+    .property_landlord {
+        width: 260px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tenant_sidebar {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        min-height: unset;
+        top: unset;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .tenant_bottom {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .tenant_body_right {
+        margin-left: 0;
+        padding: 20px 16px;
+    }
+
+    .tenant_body_right .tenant_header h2 {
+        font-size: 1.4rem;
+    }
+
+    .tenant_property {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .tenant_header ul {
+        display: none;
+    }
+
+
+    .property-details__layout {
+        flex-direction: column;
+    }
+
+    .property_landlord {
+        width: 100%;
+        position: static;
+    }
+}
+
+@media (max-width: 640px) {
+    .tenant__pagination {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .tenant__pagination-btn {
+        min-width: 34px;
+        height: 34px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .tenant_body_right {
+        padding: 16px 12px;
+    }
+
+    .tenant_body_right .tenant_header h2 {
+        font-size: 1.25rem;
+    }
+
+    .tenant_body_right .tenant_header p {
+        font-size: 0.875rem;
+    }
+
+    .tenant__pagination-controls {
+        gap: 4px;
+    }
+
+    .tenant__pagination-btn {
+        min-width: 32px;
+        height: 32px;
+        padding: 0 8px;
+    }
+}
+
+
+
+.carousel {
+    width: 100%;
+    margin-bottom: 28px;
+}
+
+
+.carousel__main {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #e8eaed;
+}
+
+.carousel__main-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.25s ease;
+}
+
+
+.carousel__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--text-h);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    z-index: 2;
+}
+
+.carousel__arrow:hover {
+    background-color: #ffffff;
+    transform: translateY(-50%) scale(1.08);
+}
+
+.carousel__arrow--prev {
+    left: 14px;
+}
+
+.carousel__arrow--next {
+    right: 14px;
+}
+
+/* ---- Counter badge ---- */
+.carousel__counter {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    z-index: 2;
+}
+
+/* ---- Thumbnail strip ---- */
+.carousel__thumbnails {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.carousel__thumbnails::-webkit-scrollbar {
+    height: 4px;
+}
+
+.carousel__thumbnails::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.carousel__thumbnails::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 4px;
+}
+
+.carousel__thumb {
+    flex-shrink: 0;
+    width: 88px;
+    height: 64px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, opacity 0.2s ease;
+    opacity: 0.65;
+}
+
+.carousel__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.carousel__thumb:hover {
+    opacity: 0.9;
+}
+
+.carousel__thumb--active {
+    border-color: var(--primary);
+    opacity: 1;
+}
+
+/* ---- Info block below carousel ---- */
+.property-details__info {
+    padding-top: 4px;
+}
+
+/* ---- Responsive carousel ---- */
+@media (max-width: 768px) {
+    .carousel__main {
+        height: 260px;
+    }
+
+    .carousel__arrow {
+        width: 36px;
+        height: 36px;
+        font-size: 1.3rem;
+    }
+
+    .carousel__thumb {
+        width: 72px;
+        height: 52px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel__main {
+        height: 210px;
+        border-radius: 8px;
+    }
+
+    .carousel__arrow {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+
+    .carousel__thumb {
+        width: 60px;
+        height: 44px;
+    }
+}
+
+/* Lease Modal */
+
+.modal_overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+    backdrop-filter: blur(2px);
+}
+
+.modal_card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    animation: modalSlideUp 0.22s ease;
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---- Modal header ---- */
+.modal_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px 24px 0 24px;
+    gap: 12px;
+}
+
+.modal_header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-h);
+    margin: 0 0 4px 0;
+}
+
+.modal_subtitle {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0 0 4px 0;
+}
+
+.modal_desc {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.modal_close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.modal_close:hover {
+    color: var(--text-h);
+    background-color: #f5f6fa;
+}
+
+/* ---- Modal body ---- */
+.modal_body {
+    padding: 20px 24px 24px 24px;
+}
+
+.modal_form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input_group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* ---- Actions row ---- */
+.modal_actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.modal_cancel {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background-color: #ffffff;
+    color: var(--bodytext);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.modal_cancel:hover {
+    background-color: #f5f6fa;
+    border-color: #d1d5db;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 480px) {
+    .modal_card {
+        border-radius: 12px;
+    }
+
+    .modal_header {
+        padding: 20px 16px 0 16px;
+    }
+
+    .modal_body {
+        padding: 16px 16px 20px 16px;
+    }
+
+    .modal_actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal_cancel {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Tenant Lease Page */
+
+.tenant_lease_requests {
+    width: 100%;
+}
+
+.tenant_lease_body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+/* ---- Status filter tabs ---- */
+.lease_tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.lease_tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background-color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.lease_tab:hover {
+    background-color: #f5f6fa;
+    border-color: #d1d5db;
+}
+
+/* Count badge inside tab */
+.lease_tab_count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: #f0f0f0;
+    color: #6b7280;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* ---- Active tab (All) ---- */
+.lease_tab--active.lease_tab--all {
+    background-color: var(--text-h);
+    border-color: var(--text-h);
+    color: #ffffff;
+}
+
+.lease_tab--active.lease_tab--all .lease_tab_count {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+
+/* ---- Active tab (Active) ---- */
+.lease_tab--active.lease_tab--active {
+    background-color: #f0fff7;
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.lease_tab--active.lease_tab--active .lease_tab_count {
+    background-color: var(--primary);
+    color: #ffffff;
+}
+
+/* ---- Active tab (Pending) ---- */
+.lease_tab--active.lease_tab--pending {
+    background-color: #fff9ec;
+    border-color: #e5a000;
+    color: #e5a000;
+}
+
+.lease_tab--active.lease_tab--pending .lease_tab_count {
+    background-color: #e5a000;
+    color: #ffffff;
+}
+
+/* ---- Active tab (Approved) ---- */
+.lease_tab--active.lease_tab--approved {
+    background-color: #eff6ff;
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+.lease_tab--active.lease_tab--approved .lease_tab_count {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+/* ---- Active tab (Rejected) ---- */
+.lease_tab--active.lease_tab--rejected {
+    background-color: #fff1f1;
+    border-color: #d92d20;
+    color: #d92d20;
+}
+
+.lease_tab--active.lease_tab--rejected .lease_tab_count {
+    background-color: #d92d20;
+    color: #ffffff;
+}
+
+/* ---- Empty state ---- */
+.lease_empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+    background-color: #ffffff;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    color: #9ca3af;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 480px) {
+    .lease_tabs {
+        gap: 6px;
+    }
+
+    .lease_tab {
+        padding: 6px 12px;
+        font-size: 0.82rem;
+    }
+}
+
+
+
+.tenant_payment_card {
+    background-color: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: box-shadow 0.2s ease;
+}
+
+.tenant_payment_card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+}
+
+/* Left accent border per status */
+.tenant_payment_card--active   { border-left: 4px solid var(--primary); }
+.tenant_payment_card--approved { border-left: 4px solid #2563eb; }
+.tenant_payment_card--pending  { border-left: 4px solid #e5a000; }
+.tenant_payment_card--rejected { border-left: 4px solid #d92d20; }
+
+/* ---- Top row ---- */
+.tenant_payment_card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.tenant_payment_card__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-h);
+    margin: 0 0 4px 0;
+}
+
+.tenant_payment_card__address {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.82rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* ---- Details grid ---- */
+.tenant_payment_card__details {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    padding: 16px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+}
+
+.tenant_payment_card__detail {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tenant_payment_card__label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.tenant_payment_card__value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-h);
+}
+
+.tenant_payment_card__rent {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.tenant_payment_card__rent span {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: #6b7280;
+}
+
+/* ---- Actions ---- */
+.tenant_payment_card__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Base button */
+.tenant_payment_card__btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.tenant_payment_card__btn:hover {
+    opacity: 0.88;
+}
+
+/* Cancel (Pending) */
+.tenant_payment_card__btn--cancel {
+    background-color: #fff1f1;
+    color: #d92d20;
+    border: 1px solid #fecaca;
+}
+
+.tenant_payment_card__btn--cancel:hover {
+    background-color: #fee2e2;
+}
+
+/* Ghost (keep) */
+.tenant_payment_card__btn--ghost {
+    background-color: #f5f6fa;
+    color: var(--bodytext);
+    border: 1px solid var(--border);
+}
+
+/* Make first payment (Approved) */
+.tenant_payment_card__btn--pay {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+.tenant_payment_card__btn--pay:hover {
+    background-color: #1d4ed8;
+}
+
+/* View schedule (Active) */
+.tenant_payment_card__btn--schedule {
+    background-color: #f0fff7;
+    color: var(--primary);
+    border: 1px solid #b7f4d4;
+}
+
+.tenant_payment_card__btn--schedule:hover {
+    background-color: #e6fff2;
+}
+
+/* Inline cancel confirmation */
+.tenant_payment_card__confirm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    background-color: #fff9f9;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+
+.tenant_payment_card__confirm p {
+    font-size: 0.875rem;
+    color: var(--bodytext);
+    margin: 0;
+}
+
+.tenant_payment_card__confirm_btns {
+    display: flex;
+    gap: 8px;
+}
+
+/* Rejected note */
+.tenant_payment_card__rejected_note {
+    font-size: 0.85rem;
+    color: #d92d20;
+    margin: 0;
+}
+
+/* =========================================
+   TENANT PAYMENT SCHEDULE
+   ========================================= */
+
+.tenant_schedule {
+    width: 100%;
+}
+
+.tenant_schedule__header {
+    margin-bottom: 28px;
+}
+
+.tenant_schedule__header h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-h);
+    margin: 8px 0 4px 0;
+}
+
+.tenant_schedule__header p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0 0 10px 0;
+}
+
+.tenant_schedule__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.tenant_schedule__meta span:first-child {
+    font-weight: 600;
+    color: var(--text-h);
+}
+
+.tenant_schedule__table {
+    width: 100%;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+    .tenant_payment_card {
+        padding: 16px;
+    }
+
+    .tenant_payment_card__details {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .tenant_payment_card__confirm_btns {
+        flex-direction: column;
+    }
+
+    .tenant_payment_card__btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+.lease_modal {
+    background-color: var(--bg);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: fadeInScale 0.25s ease;
+}
+ 
+.lease_modal .modal_header {
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #f7f7f7;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+ 
+.lease_modal .modal_header h3 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-h);
+}
+ 
+.lease_modal .modal_header .lease_modal_subtitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0 0 2px 0;
+}
+ 
+.lease_modal .modal_header .lease_modal_desc {
+    font-size: 13px;
+    color: var(--bodytext);
+    margin: 0;
+    line-height: 1.5;
+}
+ 
+.lease_modal .modal_close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9ca3af;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+ 
+.lease_modal .modal_close:hover {
+    color: var(--text-h);
+    background-color: #efefef;
+}
+ 
+.lease_modal .modal_body {
+    width: 100%;
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+}
+ 
+.lease_modal .modal_body .modal_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 85%;
+    padding: 20px;
+    gap: 4px;
+}
+ 
+.lease_modal .modal_actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 0;
+}
+ 
+.lease_modal .modal_actions .btn_secondary {
+    padding: 12px;
+    border-radius: 8px;
+    background: #f0fff7;
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    width: 100%;
+    border: 1px solid #b7f4d4;
+}
+ 
+.lease_modal .modal_actions .btn_secondary:hover {
+    background: #f9fafb;
+}
+ 
+.lease_modal .modal_actions .btn_primary {
+    font-size: 14px;
+    width: 100%;
+}
+ 
+/* ─── Schedule Pay Rent Button ───────────────────────────── */
+ 
+.schedule_pay_btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+ 
+.schedule_pay_btn:hover {
+    background-color: #16a34a;
+}
+/* =========================================
+   PAYSTACK PAYMENT STYLES
+   ========================================= */
+
+/* ── Spinner (inline, small) ── */
+@keyframes paystack_spin {
+    to { transform: rotate(360deg); }
+}
+
+.paystack_spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: paystack_spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+/* ── Paystack "P" badge on Pay Now button ── */
+.paystack_badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.25);
+    font-size: 11px;
+    font-weight: 800;
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+
+/* ── Pay Now button variant ── */
+.paystack_pay_btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #0ba4db;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+.paystack_pay_btn:hover:not(:disabled) {
+    background-color: #0991c4;
+}
+
+.paystack_pay_btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* =========================================
+   PAYSTACK CALLBACK PAGE
+   ========================================= */
+
+.paystack_callback_card {
+    background-color: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 460px;
+    padding: 48px 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    animation: fadeInScale 0.3s ease;
+}
+
+.paystack_callback_body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+
+.paystack_callback_body h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+.paystack_callback_body p {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.55;
+    max-width: 340px;
+}
+
+.paystack_icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.paystack_icon--success {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.paystack_icon--failed {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.paystack_icon--cancelled {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+.paystack_spinner_lg {
+    width: 52px;
+    height: 52px;
+    border: 4px solid #e5e7eb;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: paystack_spin 0.9s linear infinite;
+    margin-bottom: 8px;
+}
+
+.paystack_callback_body--verifying h2 { color: var(--text-h); }
+.paystack_callback_body--success h2   { color: #16a34a; }
+.paystack_callback_body--failed h2    { color: #dc2626; }
+.paystack_callback_body--cancelled h2 { color: #64748b; }
+
+.paystack_receipt {
+    width: 100%;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+    margin-top: 4px;
+}
+
+.paystack_receipt_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.875rem;
+}
+
+.paystack_receipt_row span   { color: #6b7280; flex-shrink: 0; }
+.paystack_receipt_row strong { color: var(--text-h); text-align: right; word-break: break-all; }
+
+.paystack_callback_actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.paystack_callback_btn {
+    padding: 11px 24px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+    border: none;
+    min-width: 140px;
+}
+
+.paystack_callback_btn--primary {
+    background-color: var(--primary);
+    color: #ffffff;
+}
+.paystack_callback_btn--primary:hover   { background-color: #2d9e6b; }
+
+.paystack_callback_btn--secondary {
+    background-color: #f1f5f9;
+    color: var(--text-h);
+    border: 1px solid #e2e8f0;
+}
+.paystack_callback_btn--secondary:hover { background-color: #e2e8f0; }
+
+@media (max-width: 520px) {
+    .paystack_callback_card  { padding: 32px 20px; border-radius: 12px; }
+    .paystack_callback_btn   { width: 100%; }
+}

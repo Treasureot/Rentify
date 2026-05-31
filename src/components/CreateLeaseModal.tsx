@@ -7,9 +7,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 type CreateLeaseProps = {
-    leaseId: number;
-    propertyId: number;
-    tenantId: number;
+    leaseId: string;
+    propertyId: string;
+    tenantId: string;
     startDate: string;
     endDate: string;
     rentAmount: string;
@@ -18,29 +18,21 @@ type CreateLeaseProps = {
     onLeaseCreated: () => void;
 };
 
-
-export type SavedLease = {
-    leaseId: number;
-    propertyId: number;
-    tenantId: number;
-    startDate: string;
-    endDate: string;
-    rentAmount: string;
-    status: "Active";
-};
-
 const CreateLeaseModal = ({
     propertyId,
     tenantId,
     isOpen,
     onClose,
-    onLeaseCreated
+    onLeaseCreated,
 }: CreateLeaseProps) => {
     const navigate = useNavigate();
+    const token = localStorage.getItem("accessToken") || "";
 
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
+    const [startDate, setStartDate]   = useState("");
+    const [endDate, setEndDate]       = useState("");
     const [rentAmount, setRentAmount] = useState("");
+    const [isLoading, setIsLoading]   = useState(false);
+    const [error, setError]           = useState("");
 
     if (!isOpen) return null;
 
@@ -48,34 +40,49 @@ const CreateLeaseModal = ({
         setStartDate("");
         setEndDate("");
         setRentAmount("");
+        setError("");
         onClose();
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError("");
+        setIsLoading(true);
 
-        // --- REPLACE THIS BLOCK WITH API ---
-        const newLease: SavedLease = {
-            leaseId: Date.now(),
-            propertyId,
-            tenantId,
-            startDate,
-            endDate,
-            rentAmount,
-            status: "Active",
-        };
+        try {
+            const request = await fetch(
+                `https://propms-api.fly.dev/api/v1/Leases`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        propertyId,
+                        tenantId,
+                        startDate: new Date(startDate).toISOString(),
+                        endDate:   new Date(endDate).toISOString(),
+                        rentAmount: parseFloat(rentAmount),
+                    }),
+                }
+            );
 
-        const existing: SavedLease[] = JSON.parse(
-            localStorage.getItem("activeLeases") ?? "[]"
-        );
-        localStorage.setItem(
-            "activeLeases",
-            JSON.stringify([...existing, newLease])
-        );
+            const response = await request.json();
 
-        handleClose();
-        navigate("/landlord-payment");
-        onLeaseCreated();
+            if (request.ok && response.success) {
+                handleClose();
+                onLeaseCreated();
+                navigate("/landlord-payment");
+            } else {
+                setError(response.message || "Failed to create lease. Please try again.");
+            }
+
+        } catch {
+            setError("Network error. Please check your connection.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -119,6 +126,12 @@ const CreateLeaseModal = ({
                             />
                         </div>
 
+                        {error && (
+                            <p style={{ color: '#e53e3e', fontSize: '13px', marginBottom: '8px' }}>
+                                ⚠ {error}
+                            </p>
+                        )}
+
                         <div className="modal_actions">
                             <ButtonAlt
                                 label="Cancel"
@@ -126,8 +139,9 @@ const CreateLeaseModal = ({
                                 onClick={handleClose}
                             />
                             <Button
-                                label="Create Lease"
+                                label={isLoading ? "Creating..." : "Create Lease"}
                                 type="submit"
+                                disabled={isLoading}
                             />
                         </div>
 

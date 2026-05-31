@@ -2,12 +2,12 @@ import '../Styles/Landlord.css'
 import { NavLink, useLocation } from "react-router-dom";
 import LogoImg from '../assets/images/rentify-logoWhite.svg';
 import { FiGrid, FiHome } from "react-icons/fi";
-import { HiOutlineDocumentText, HiOutlineClipboard } from "react-icons/hi";
+import { HiOutlineDocumentText, HiOutlineClipboard, HiOutlineBell } from "react-icons/hi";
 
 const LandlordSidebar = () => {
     const location = useLocation();
 
-    return (
+    return ( 
         <div>
             <div className="landlord_sidebar">
                 <div className="logo_header">
@@ -68,7 +68,19 @@ const LandlordSidebar = () => {
                                     <span>Lease Requests</span>
                                 </div>
                             </NavLink>
-                        </li>                        
+                        </li>
+                        
+                        <li>
+                           <NavLink
+                             to="/landlord-notifications"
+                             className={({ isActive }) => isActive ? "active" : ""}
+                            >
+                            <div className="sidebar-item">
+                               <HiOutlineBell size={20} />
+                                <span>Notifications</span>
+                            </div>
+                          </NavLink>
+                        </li>                          
                     </ul>
                 </div>
             </div>

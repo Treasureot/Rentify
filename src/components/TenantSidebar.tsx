@@ -32,7 +32,7 @@ const TenantSidebar = () => {
         label="PRICE RANGE"
         value={rangeDropDown}
         onChange={(range) => setRangeDropDown(range)} 
-      />
+      />  
     </div>
   );
 };

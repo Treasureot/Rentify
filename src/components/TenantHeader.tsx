@@ -35,19 +35,19 @@ const TenantHeader = ({
 
                     <li>
                         <NavLink 
-                            to="/property" 
+                            to="/tenant-lease" 
                             className={({ isActive }) => isActive ? "active" : ""}
                         >
-                        Listings
+                        Lease Management
                         </NavLink>
                     </li> 
 
                     <li>
                         <NavLink 
-                            to="/property" 
+                            to="/tenant-notifications" 
                             className={({ isActive }) => isActive ? "active" : ""}
                         >
-                        Management
+                        Notifications
                         </NavLink>
                     </li>                                            
                 </ul>

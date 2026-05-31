@@ -656,6 +656,63 @@
 }
 
 
+/* ─── Reject Modal ───────────────────────────────────────── */
+
+.reject_modal {
+    background-color: var(--bg);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 420px;
+    padding: 32px;
+    animation: fadeInScale 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.reject_modal h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-h);
+    margin: 0;
+}
+
+.reject_modal p {
+    font-size: 14px;
+    color: var(--bodytext);
+    margin: 0;
+}
+
+.reject_reason {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.reject_reason p {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-h);
+}
+
+.reject_reason textarea {
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background-color: var(--bg);
+    font-size: 14px;
+    color: var(--bodytext);
+    outline: none;
+    resize: none;
+    transition: 0.2s ease;
+}
+
+.reject_reason textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+
 /* ─── Lease Modal Amount ─────────────────────────────────── */
 
 .lease-modal-amount {
@@ -852,6 +909,55 @@
     border-radius: 10px;
 }
 
+/* ─── Schedule Action Buttons ────────────────────────────── */
+
+.schedule_action_buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.schedule_pay_btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.schedule_pay_btn:hover {
+    background-color: #16a34a;
+}
+
+.schedule_reject_btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    background-color: #fff1f1;
+    color: #d92d20;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid #fecaca;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.schedule_reject_btn:hover {
+    background-color: #fee2e2;
+}
+
 .schedule_table.actions_group {
     position: relative;
     width: 60px;
@@ -909,5 +1015,584 @@
     to {
         opacity: 1;
         transform: scale(1) translateY(0);
+    }
+}
+
+/* ─── User Table ─────────────────────────────────────────── */
+.user_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.user_table thead tr {
+    background: #f3f4f6;
+}
+
+.user_table th {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+    white-space: nowrap;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.user_table td {
+    padding: 0.85rem 1rem;
+    color: #4b5563;
+    border-bottom: 1px solid #f3f4f6;
+    white-space: nowrap;
+}
+
+.user_table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.user_table tbody tr:hover {
+    background: #fafafa;
+}
+
+.user_status,
+.user_role {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.user_status--active {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.user_status--suspended {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.user_role--landlord {
+    background: #eff6ff;
+    color: #2563eb;
+}
+ 
+.user_role--tenant {
+    background: #faf5ff;
+    color: #7c3aed;
+}
+
+/* ─── User Details Modal ─────────────────────────────────────── */
+
+.user_details_modal {
+    background-color: var(--bg);
+    border-radius: 12px;
+    max-height: 60vh;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    animation: fadeInScale 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+}
+
+.user_card {
+    position: relative;
+
+    h3 {
+        color: var(--primary);
+    }
+
+.user_group {
+        display: flex;
+        justify-content: space-between;
+
+    .user_body_left {
+        font-size: 14px;
+    }
+
+    .user_body_right {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--header-text);
+    }
+}
+
+.property_details_close {
+    position: absolute;
+    z-index: 10;
+    top: -20px;
+    right: -20px;
+    background-color: rgba(0, 0, 0, 0.35);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.property_details_close:hover {
+    background-color: rgba(0, 0, 0, 0.55);
+}
+}
+
+
+/* ───Property Approval Table ─────────────────────────────────────── */
+
+.approval_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.approval_table thead tr {
+    background: #f3f4f6;
+}
+
+.approval_table th {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+    white-space: nowrap;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.approval_table td {
+    padding: 0.85rem 1rem;
+    color: #4b5563;
+    border-bottom: 1px solid #f3f4f6;
+    white-space: nowrap;
+}
+
+.approval_table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.approval_table tbody tr:hover {
+    background: #fafafa;
+}
+
+.property_status {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.property_status--approved {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.property_status--rejected  {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.property_status--pending {
+    background-color: #fff1c2;
+    color: #e5a000; 
+}
+
+
+/* Lease Request Modal */
+
+.lease_modal {
+    background-color: var(--bg);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: fadeInScale 0.25s ease;
+}
+ 
+.lease_modal .modal_header {
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #f7f7f7;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+ 
+.lease_modal .modal_header h3 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-h);
+}
+ 
+.lease_modal .modal_header .lease_modal_subtitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0 0 2px 0;
+}
+ 
+.lease_modal .modal_header .lease_modal_desc {
+    font-size: 13px;
+    color: var(--bodytext);
+    margin: 0;
+    line-height: 1.5;
+}
+ 
+.lease_modal .modal_close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9ca3af;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+ 
+.lease_modal .modal_close:hover {
+    color: var(--text-h);
+    background-color: #efefef;
+}
+ 
+.lease_modal .modal_body {
+    width: 100%;
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+}
+ 
+.lease_modal .modal_body .modal_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 85%;
+    padding: 20px;
+    gap: 4px;
+}
+ 
+.lease_modal .modal_actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 0;
+}
+ 
+.lease_modal .modal_actions .btn_secondary {
+    padding: 12px;
+    border-radius: 8px;
+    background: #f0fff7;
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    width: 100%;
+    border: 1px solid #b7f4d4;
+}
+ 
+.lease_modal .modal_actions .btn_secondary:hover {
+    background: #f9fafb;
+}
+ 
+.lease_modal .modal_actions .btn_primary {
+    font-size: 14px;
+    width: 100%;
+    background-color: var(--primary);
+    color: #ffffff;
+}
+
+.lease_modal .modal_actions .btn_primary:hover {
+    font-size: 14px;
+    width: 100%;
+    background-color: var(--primary);
+    color: #ffffff;
+}
+
+/* =========================================
+   Notifications.css
+   ========================================= */
+
+/* ---- Page shell ---- */
+.notif_page {
+    width: 100%;
+    max-width: 720px;
+}
+
+/* ---- Header ---- */
+.notif_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.notif_header_left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-h);
+}
+
+.notif_header_left h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-h);
+    margin: 0 0 2px 0;
+    letter-spacing: -0.3px;
+}
+
+.notif_header_left p {
+    font-size: 0.82rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.notif_mark_all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--primary);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.notif_mark_all:hover {
+    background-color: #f0fff7;
+    border-color: var(--primary);
+}
+
+
+.notif_tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.notif_tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background-color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.notif_tab:hover {
+    background-color: #f5f6fa;
+}
+
+.notif_tab--active {
+    background-color: var(--text-h);
+    border-color: var(--text-h);
+    color: #ffffff;
+}
+
+.notif_tab_count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background-color: rgba(255,255,255,0.2);
+    color: inherit;
+}
+
+.notif_tab:not(.notif_tab--active) .notif_tab_count {
+    background-color: #f0f0f0;
+    color: #6b7280;
+}
+
+.notif_tab_count--unread {
+    background-color: #d92d20 !important;
+    color: #ffffff !important;
+}
+
+
+.notif_list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+
+.notif_item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    border: 1px solid var(--border);
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.notif_item:hover {
+    background-color: #fafafa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.notif_item--unread {
+    background-color: #f8fffe;
+    border-left: 3px solid var(--notif-accent, var(--primary));
+}
+
+
+.notif_dot {
+    position: absolute;
+    top: 18px;
+    right: 48px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--notif-accent, var(--primary));
+    flex-shrink: 0;
+}
+
+
+.notif_icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #f5f6fa;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+
+.notif_content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notif_content_top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.notif_title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-h);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.notif_time {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.notif_message {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.5;
+}
+
+
+.notif_read_btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: none;
+    background: none;
+    color: #9ca3af;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.notif_read_btn:hover {
+    color: var(--primary);
+    background-color: #f0fff7;
+}
+
+/* ---- Empty state ---- */
+.notif_empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 60px 20px;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    color: #9ca3af;
+    text-align: center;
+}
+
+.notif_empty p {
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 480px) {
+    .notif_item {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .notif_icon {
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
+    }
+
+    .notif_content_top {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .notif_dot {
+        display: none;
     }
 }

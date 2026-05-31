@@ -23,6 +23,7 @@ type PaymentCardProps = {
   endDate: string;
   pendingLease?: LeaseData;
   onLeaseUpdated?: (updated: LeaseData) => void;
+  onViewPaymentSchedule?: () => void;
 };
 
 const PaymentCard = ({
@@ -38,6 +39,7 @@ const PaymentCard = ({
   endDate,
   pendingLease,
   onLeaseUpdated,
+  onViewPaymentSchedule,
 }: PaymentCardProps) => {
   const navigate = useNavigate();
   const [openLeaseModal, setOpenLeaseModal] = useState(false);
