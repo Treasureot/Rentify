@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import TenantHeader from "../../components/TenantHeader";
 import "../../Styles/Tenant.css";
-import "../../Styles/Cards.css";
+import "../../Styles/cards.css";
 
 
 

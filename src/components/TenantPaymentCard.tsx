@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import type { LeaseData } from "../pages/Tenants/TenantLease";
-import "../Styles/Cards.css";
+import "../Styles/cards.css";
 import "../Styles/Tenant.css";
 
 interface TenantPaymentCardProps {

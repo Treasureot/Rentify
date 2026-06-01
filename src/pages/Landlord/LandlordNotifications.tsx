@@ -2,7 +2,7 @@ import DashboardHeader from "../../components/DashboardHeader";
 import LandlordSidebar from "../../components/LandlordSidebar";
 import NotificationsPage from "../../components/NotificationsPage";
 import "../../Styles/Landlord.css";
-import "../../Styles/Cards.css";
+import "../../Styles/cards.css";
 
 const LandlordNotifications = () => {
     const firstName = localStorage.getItem("firstName") || "";

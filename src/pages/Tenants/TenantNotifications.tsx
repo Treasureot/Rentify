@@ -2,7 +2,7 @@ import TenantHeader from "../../components/TenantHeader";
 import TenantSidebar from "../../components/TenantSidebar";
 import NotificationsPage from "../../components/NotificationsPage";
 import "../../Styles/Tenant.css";
-import "../../Styles/Cards.css";
+import "../../Styles/cards.css";
 
 const TenantNotifications = () => {
     const firstName = localStorage.getItem("firstName") || "";

@@ -1,4 +1,4 @@
-import '../Styles/Cards.css'
+import '../Styles/cards.css'
 import { HiOutlineDocumentText, HiChevronRight } from 'react-icons/hi';
 import { MdOutlineReceiptLong } from 'react-icons/md';
 import { GrUserWorker } from 'react-icons/gr';

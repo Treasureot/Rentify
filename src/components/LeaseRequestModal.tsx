@@ -2,7 +2,7 @@ import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import Input from "./Input";
 import Button from "./Button";
-import "../Styles/Cards.css";
+import "../Styles/cards.css";
 
 interface LeaseRequestModalProps {
     isOpen: boolean;

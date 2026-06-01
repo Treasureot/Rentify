@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import "../Styles/Cards.css";
+import "../Styles/cards.css";
 import { type Property } from "../pages/Landlord/LandlordProperty";
 import PropertyDetails from "../components/PropertyDetails";
 

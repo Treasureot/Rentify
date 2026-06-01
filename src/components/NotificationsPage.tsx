@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { IoCheckmarkDone, IoNotificationsOutline } from "react-icons/io5";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
-import "../Styles/Cards.css";
+import "../Styles/cards.css";
 
 type NotificationType =
     | "LeaseRequestSubmitted"

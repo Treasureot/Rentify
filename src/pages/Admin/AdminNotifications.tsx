@@ -2,7 +2,7 @@ import DashboardHeader from "../../components/DashboardHeader";
 import AdminSidebar from "../../components/AdminSidebar";
 import NotificationsPage from "../../components/NotificationsPage";
 import "../../Styles/Admin.css";
-import "../../Styles/Cards.css";
+import "../../Styles/cards.css";
 
 const AdminNotifications = () => {
     const firstName = localStorage.getItem("firstName") || "";

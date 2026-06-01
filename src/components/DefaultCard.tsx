@@ -1,4 +1,4 @@
-import '../Styles/Cards.css'
+import '../Styles/cards.css'
 
 type DefaultCardProps = {
     TotalValue: number;

@@ -1,4 +1,4 @@
-import '../Styles/Cards.css'
+import '../Styles/cards.css'
 import { FaNairaSign } from 'react-icons/fa6';
 
 type ActivityProps = {

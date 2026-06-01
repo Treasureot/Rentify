@@ -1,5 +1,5 @@
 import "../Styles/PropertyCard.css";
-import "../styles/Cards.css";
+import "../styles/cards.css";
 import { MdLocationOn } from "react-icons/md";
 import { FaNairaSign } from "react-icons/fa6";
 import ButtonAlt from "./ButtonAlt";

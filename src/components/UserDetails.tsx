@@ -1,4 +1,4 @@
-import "../Styles/Cards.css"
+import "../Styles/cards.css"
 import { FiX } from "react-icons/fi";
 import { useEffect, useRef } from "react"
 

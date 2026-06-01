@@ -1,4 +1,4 @@
-import "../Styles/Cards.css";
+import "../Styles/cards.css";
 import { useState, useEffect, useRef } from "react";
 import UserDetails from "./UserDetails";
 import ApprovalModal from "./ApprovalModal";

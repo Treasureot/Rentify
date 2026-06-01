@@ -1,4 +1,4 @@
-import "../Styles/Cards.css";
+import "../Styles/cards.css";
 import "../Styles/PropertyCard.css";
 import Button from "./Button";
 import ButtonAlt from "./ButtonAlt";

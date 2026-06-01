@@ -1,4 +1,4 @@
-import "../Styles/Cards.css";
+import "../Styles/cards.css";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import ButtonAlt from "../components/ButtonAlt";

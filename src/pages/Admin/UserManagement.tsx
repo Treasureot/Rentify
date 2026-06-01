@@ -1,6 +1,6 @@
 import "../../Styles/Admin.css";
 import '../../Styles/Landlord.css';
-import "../../Styles/Cards.css";
+import "../../Styles/cards.css";
 import AdminSidebar from "../../components/AdminSidebar";
 import DashboardHeader from "../../components/DashboardHeader";
 import UserTable from "../../components/UserTable";

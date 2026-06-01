@@ -1,5 +1,5 @@
 // SuccessModal.tsx
-import "../Styles/Cards.css";
+import "../Styles/cards.css";
 import SuccessImg from "../assets/images/firework.png";
 import { useNavigate } from "react-router-dom";
 

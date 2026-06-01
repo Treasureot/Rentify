@@ -1,4 +1,4 @@
-import "../Styles/Cards.css";
+import "../Styles/cards.css";
 import Button from "./Button";
 import ButtonAlt from "./ButtonAlt";
 import { useState, useEffect } from "react";
