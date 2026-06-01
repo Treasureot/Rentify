@@ -1,7 +1,8 @@
 import "../Styles/cards.css";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import PropertyApprovalDetails from "./PropertyApprovalDetails";
 import ApprovalModal from "./ApprovalModal";
+import RejectModal from "./RejectModal";
 import SuccessModal from "./SuccessModal";
 
 type PropertyImage = {
@@ -40,9 +41,7 @@ const formatCurrency = (amount: number) =>
 
 const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString("en-NG", {
-        year:  "numeric",
-        month: "long",
-        day:   "numeric",
+        year: "numeric", month: "long", day: "numeric",
     });
 
 const getStatusClass = (status: string) => {
@@ -57,15 +56,17 @@ const getStatusClass = (status: string) => {
 const PropertyApprovalTable = () => {
     const token = localStorage.getItem("accessToken") || "";
 
-    const [properties, setProperties]   = useState<PropertyItem[]>([]);
-    const [isLoading, setIsLoading]     = useState(true);
-    const [error, setError]             = useState("");
+    const [properties, setProperties]     = useState<PropertyItem[]>([]);
+    const [isLoading, setIsLoading]       = useState(true);
+    const [error, setError]               = useState("");
     const [openActionId, setOpenActionId] = useState<string | null>(null);
+
     const [detailsProperty, setDetailsProperty] = useState<PropertyItem | null>(null);
     const [approveProperty, setApproveProperty] = useState<PropertyItem | null>(null);
     const [rejectProperty, setRejectProperty]   = useState<PropertyItem | null>(null);
     const [openApproveSuccess, setOpenApproveSuccess] = useState(false);
     const [openRejectSuccess, setOpenRejectSuccess]   = useState(false);
+    const [actionMsg, setActionMsg] = useState("");
 
     const actionRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
@@ -74,120 +75,106 @@ const PropertyApprovalTable = () => {
         else actionRefs.current.delete(id);
     };
 
-    const toggleAction = (id: string) => {
-        setOpenActionId((prev) => (prev === id ? null : id));
-    };
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (openActionId === null) return;
+            const ref = actionRefs.current.get(openActionId);
+            if (ref && !ref.contains(e.target as Node)) setOpenActionId(null);
+        };
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
+    }, [openActionId]);
 
-    // Fetch pending properties
-    const fetchProperties = async () => {
+    // ── Fetch pending properties
+    // GET /Properties/pending
+    const fetchProperties = useCallback(async () => {
         setIsLoading(true);
         setError("");
-
         try {
-            const request = await fetch(
-                `https://propms-api.fly.dev/api/v1/Properties/pending`,
+            const res = await fetch(
+                "https://propms-api.fly.dev/api/v1/Properties/pending",
                 {
-                    method: "GET",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
                     },
                 }
             );
-
-            const response = await request.json();
-
-            if (request.ok && response.success) {
-                setProperties(response.data);
+            const data = await res.json();
+            if (res.ok && data.success) {
+                setProperties(data.data);
             } else {
-                setError(response.message || "Failed to load pending properties.");
+                setError(data.message || "Failed to load pending properties.");
             }
-
         } catch {
-            setError("No Pending Property Approval.");
+            setError("No details found at the moment.");
         } finally {
             setIsLoading(false);
         }
-    };
-
-    useEffect(() => {
-        fetchProperties();
     }, [token]);
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (openActionId === null) return;
-            const activeRef = actionRefs.current.get(openActionId);
-            if (activeRef && !activeRef.contains(event.target as Node)) {
-                setOpenActionId(null);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [openActionId]);
+    useEffect(() => { fetchProperties(); }, [fetchProperties]);
 
+    // ── Approve: POST /Properties/{id}/approve
     const handleConfirmApprove = async () => {
         if (!approveProperty) return;
         const id = approveProperty.id;
-
         try {
-            const request = await fetch(
+            const res = await fetch(
                 `https://propms-api.fly.dev/api/v1/Properties/${id}/approve`,
                 {
-                    method: "PATCH",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
                     },
                 }
             );
-
-            const response = await request.json();
-
-            if (request.ok && response.success) {
+            const data = await res.json();
+            if (res.ok && data.success) {
                 setProperties((prev) => prev.filter((p) => p.id !== id));
                 setApproveProperty(null);
+                setActionMsg("You have successfully approved this property. The landlord has been notified.");
                 setOpenApproveSuccess(true);
             } else {
-                setError(response.message || "Failed to approve property.");
+                setError(data.message || "Failed to approve property.");
                 setApproveProperty(null);
             }
-
         } catch {
-            setError("No pending property approval.");
+            setError("No details found at the moment.");
             setApproveProperty(null);
         }
     };
 
-    const handleConfirmReject = async () => {
+    // ── Reject: POST /Properties/{id}/reject 
+    // RejectModal passes the reason string to onConfirm
+    const handleConfirmReject = async (reason: string) => {
         if (!rejectProperty) return;
         const id = rejectProperty.id;
-
         try {
-            const request = await fetch(
+            const res = await fetch(
                 `https://propms-api.fly.dev/api/v1/Properties/${id}/reject`,
                 {
-                    method: "PATCH",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
                     },
+                    body: JSON.stringify({ reason }),
                 }
             );
-
-            const response = await request.json();
-
-            if (request.ok && response.success) {
+            const data = await res.json();
+            if (res.ok && data.success) {
                 setProperties((prev) => prev.filter((p) => p.id !== id));
                 setRejectProperty(null);
+                setActionMsg("You have successfully rejected this property. The landlord has been notified.");
                 setOpenRejectSuccess(true);
             } else {
-                setError(response.message || "Failed to reject property.");
+                setError(data.message || "Failed to reject property.");
                 setRejectProperty(null);
             }
-
         } catch {
-            setError("Network error. Please check your connection.");
+            setError("No details found at the moment.");
             setRejectProperty(null);
         }
     };
@@ -201,7 +188,7 @@ const PropertyApprovalTable = () => {
                             <th style={{ borderRadius: "10px 0px 0px 0px" }}>Title</th>
                             <th>Location</th>
                             <th>Address</th>
-                            <th>Rent Amount/yr</th>
+                            <th>Rent / yr</th>
                             <th>Submitted By</th>
                             <th>Date Submitted</th>
                             <th>Status</th>
@@ -213,23 +200,19 @@ const PropertyApprovalTable = () => {
                         {isLoading ? (
                             <tr>
                                 <td colSpan={8} style={{ textAlign: "center", padding: "40px", color: "#94A3B8" }}>
-                                    Loading pending properties...
+                                    Loading pending properties…
                                 </td>
                             </tr>
                         ) : error ? (
                             <tr>
                                 <td colSpan={8}>
                                     <div style={{
-                                        backgroundColor: '#fff5f5',
-                                        border: '1px solid #feb2b2',
-                                        borderRadius: '8px',
-                                        padding: '12px 16px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '8px'
+                                        backgroundColor: "#fff5f5", border: "1px solid #feb2b2",
+                                        borderRadius: "8px", padding: "12px 16px",
+                                        display: "flex", alignItems: "center", gap: "8px",
                                     }}>
-                                        <span style={{ color: '#e53e3e', fontSize: '18px' }}>⚠</span>
-                                        <p style={{ color: '#e53e3e', fontSize: '14px', margin: 0 }}>{error}</p>
+                                        <span style={{ color: "#e53e3e", fontSize: "18px" }}>⚠</span>
+                                        <p style={{ color: "#e53e3e", fontSize: "14px", margin: 0 }}>{error}</p>
                                     </div>
                                 </td>
                             </tr>
@@ -253,34 +236,24 @@ const PropertyApprovalTable = () => {
                                             {property.status}
                                         </span>
                                     </td>
-
                                     <td className="actions_group">
                                         <div className="action_body" ref={setRef(property.id)}>
                                             <button
                                                 className="action_btn"
-                                                onClick={() => toggleAction(property.id)}
+                                                onClick={() => setOpenActionId((p) => p === property.id ? null : property.id)}
                                             >
                                                 ⋮
                                             </button>
 
                                             {openActionId === property.id && (
                                                 <div className="dropdown_menu">
-                                                    <button onClick={() => {
-                                                        setDetailsProperty(property);
-                                                        setOpenActionId(null);
-                                                    }}>
+                                                    <button onClick={() => { setDetailsProperty(property); setOpenActionId(null); }}>
                                                         View Details
                                                     </button>
-                                                    <button onClick={() => {
-                                                        setApproveProperty(property);
-                                                        setOpenActionId(null);
-                                                    }}>
+                                                    <button onClick={() => { setApproveProperty(property); setOpenActionId(null); }}>
                                                         Approve
                                                     </button>
-                                                    <button onClick={() => {
-                                                        setRejectProperty(property);
-                                                        setOpenActionId(null);
-                                                    }}>
+                                                    <button onClick={() => { setRejectProperty(property); setOpenActionId(null); }}>
                                                         Reject
                                                     </button>
                                                 </div>
@@ -316,13 +289,13 @@ const PropertyApprovalTable = () => {
                 </div>
             )}
 
-            {/* Approve confirmation modal */}
+
             {approveProperty && (
                 <div className="modal_overlay" onClick={() => setApproveProperty(null)}>
                     <div className="user_details_modal" onClick={(e) => e.stopPropagation()}>
                         <ApprovalModal
                             title="Approve Property"
-                            approvalMessage={`Do you want to approve "${approveProperty.title}"?`}
+                            approvalMessage={`Approve "${approveProperty.title}"? The landlord will be notified.`}
                             label="Approve"
                             labelAlt="Cancel"
                             onClose={() => setApproveProperty(null)}
@@ -333,26 +306,20 @@ const PropertyApprovalTable = () => {
                 </div>
             )}
 
-            {/* Reject confirmation modal */}
-            {rejectProperty && (
-                <div className="modal_overlay" onClick={() => setRejectProperty(null)}>
-                    <div className="user_details_modal" onClick={(e) => e.stopPropagation()}>
-                        <ApprovalModal
-                            title="Reject Property"
-                            approvalMessage={`Do you want to reject "${rejectProperty.title}"?`}
-                            label="Reject"
-                            labelAlt="Cancel"
-                            onClose={() => setRejectProperty(null)}
-                            onConfirm={handleConfirmReject}
-                            isOpen={!!rejectProperty}
-                        />
-                    </div>
-                </div>
-            )}
+
+            <RejectModal
+                title="Reject Property"
+                message={rejectProperty ? `Reject "${rejectProperty.title}"?` : ""}
+                label="Reject"
+                isOpen={!!rejectProperty}
+                onClose={() => setRejectProperty(null)}
+                onConfirm={handleConfirmReject}
+            />
+
 
             <SuccessModal
                 title="Property Approved"
-                message="You have successfully approved this property. The landlord has been notified."
+                message={actionMsg}
                 label="Done"
                 path=""
                 isOpen={openApproveSuccess}
@@ -362,7 +329,7 @@ const PropertyApprovalTable = () => {
 
             <SuccessModal
                 title="Property Rejected"
-                message="You have successfully rejected this property. The landlord has been notified."
+                message={actionMsg}
                 label="Done"
                 path=""
                 isOpen={openRejectSuccess}

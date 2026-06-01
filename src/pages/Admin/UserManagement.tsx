@@ -83,7 +83,7 @@ const UserManagement = () => {
                 setError(response.message || 'Failed to suspend user.');
             }
         } catch (err) {
-            setError('Network error. Please check your connection.');
+            setError('No details found at the moment.');
         }
     };
 
@@ -110,7 +110,7 @@ const UserManagement = () => {
                 setError(response.message || 'Failed to activate user.');
             }
         } catch (err) {
-            setError('Network error. Please check your connection.');
+            setError('No details found at the moment.');
         }
     };
 

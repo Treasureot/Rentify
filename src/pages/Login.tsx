@@ -63,7 +63,7 @@ function Login() {
             }
 
         } catch (err) {
-            setError('Network error. Please check your connection.');
+            setError('No details found at the moment.');
         } finally {
             setIsLoading(false);
         }

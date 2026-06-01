@@ -5,7 +5,7 @@ import ButtonAlt from "../components/ButtonAlt";
 import React, { useState, useEffect, useCallback } from "react";
 import { type Property } from "../pages/Landlord/LandlordProperty";
 
-const IMAGE_MAX_BYTES = 2 * 1024 * 1024;
+const IMAGE_MAX_BYTES = 2 * 1024 * 1024; // 2 MB
 const DESCRIPTION_MAX = 2000;
 const TITLE_MAX       = 200;
 
@@ -28,19 +28,20 @@ interface FormErrors {
 
 function AddPropertyModal({ isOpen, onClose, onAdd, onRefresh, property }: AddPropertyModalProps) {
     const token = localStorage.getItem("accessToken") || "";
+    const isEditing = !!property;
 
-    const [title, setTitle]           = useState("");
+    const [title, setTitle]             = useState("");
     const [description, setDescription] = useState("");
-    const [location, setLocation]     = useState("");
-    const [address, setAddress]       = useState("");
-    const [rent, setRent]             = useState("");
-    const [type, setType]             = useState("");
-    const [images, setImages]         = useState<File[]>([]);
-    const [errors, setErrors]         = useState<FormErrors>({});
-    const [isLoading, setIsLoading]   = useState(false);
-    const [apiError, setApiError]     = useState("");
+    const [location, setLocation]       = useState("");
+    const [address, setAddress]         = useState("");
+    const [rent, setRent]               = useState("");
+    const [type, setType]               = useState("");
+    const [images, setImages]           = useState<File[]>([]);
+    const [errors, setErrors]           = useState<FormErrors>({});
+    const [isLoading, setIsLoading]     = useState(false);
+    const [apiError, setApiError]       = useState("");
 
-    // Populate form when editing
+    // ── Populate form when editing 
     useEffect(() => {
         if (property) {
             setTitle(property.title || "");
@@ -49,52 +50,51 @@ function AddPropertyModal({ isOpen, onClose, onAdd, onRefresh, property }: AddPr
             setAddress(property.address || "");
             setRent(property.rentAmount?.toString() || "");
             setType(property.propertyType || "");
+            setImages([]); 
         } else {
             resetForm();
         }
     }, [property, isOpen]);
 
     const resetForm = () => {
-        setTitle("");
-        setDescription("");
-        setLocation("");
-        setAddress("");
-        setRent("");
-        setType("");
-        setImages([]);
-        setErrors({});
-        setApiError("");
+        setTitle(""); setDescription(""); setLocation("");
+        setAddress(""); setRent(""); setType("");
+        setImages([]); setErrors({}); setApiError("");
     };
 
-    const validateTitle = (value: string): string | undefined => {
-        if (!value.trim()) return "Title is required.";
-        if (value.length > TITLE_MAX)
-            return `Title must be ${TITLE_MAX} characters or fewer (${value.length}/${TITLE_MAX}).`;
+    // ── Validation helpers 
+    const validateTitle = (v: string): string | undefined => {
+        if (!v.trim()) return "Title is required.";
+        if (v.length > TITLE_MAX)
+            return `Title must be ${TITLE_MAX} characters or fewer (${v.length}/${TITLE_MAX}).`;
     };
 
-    const validateDescription = (value: string): string | undefined => {
-        if (!value.trim()) return "Description is required.";
-        if (value.length > DESCRIPTION_MAX)
-            return `Description must be ${DESCRIPTION_MAX} characters or fewer (${value.length}/${DESCRIPTION_MAX}).`;
+    const validateDescription = (v: string): string | undefined => {
+        if (!v.trim()) return "Description is required.";
+        if (v.length > DESCRIPTION_MAX)
+            return `Description must be ${DESCRIPTION_MAX} characters or fewer (${v.length}/${DESCRIPTION_MAX}).`;
     };
 
     const validateImages = (files: File[]): string | undefined => {
         const oversized = files.filter((f) => f.size > IMAGE_MAX_BYTES);
-        if (oversized.length > 0) {
+        if (oversized.length > 0)
             return `These files exceed 2 MB: ${oversized.map((f) => f.name).join(", ")}`;
-        }
+        // Images required only when creating
+        if (!isEditing && files.length === 0)
+            return "Please upload at least one image.";
     };
 
+    // ── Live-validation handlers 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setTitle(value);
-        setErrors((prev) => ({ ...prev, title: validateTitle(value) }));
+        const v = e.target.value;
+        setTitle(v);
+        setErrors((prev) => ({ ...prev, title: validateTitle(v) }));
     };
 
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const value = e.target.value;
-        setDescription(value);
-        setErrors((prev) => ({ ...prev, description: validateDescription(value) }));
+        const v = e.target.value;
+        setDescription(v);
+        setErrors((prev) => ({ ...prev, description: validateDescription(v) }));
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,6 +103,7 @@ function AddPropertyModal({ isOpen, onClose, onAdd, onRefresh, property }: AddPr
         setImages(files);
         setErrors((prev) => ({ ...prev, images: validateImages(files) }));
     };
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -129,45 +130,44 @@ function AddPropertyModal({ isOpen, onClose, onAdd, onRefresh, property }: AddPr
             formData.append("address", address);
             formData.append("rentAmount", rent);
             formData.append("propertyType", type);
+            // On edit, images are optional, only append if user selected new ones
             images.forEach((file) => formData.append("images", file));
 
-            const url = property
-                ? `https://propms-api.fly.dev/api/v1/Properties/${property.id}`
+            // POST  → create:  /Properties
+            // PUT   → update:  /Properties/{id}
+            const url    = isEditing
+                ? `https://propms-api.fly.dev/api/v1/Properties/${property!.id}`
                 : `https://propms-api.fly.dev/api/v1/Properties`;
+            const method = isEditing ? "PUT" : "POST";
 
-            const method = property ? "PUT" : "POST";
-
-            const request = await fetch(url, {
+            const res = await fetch(url, {
                 method,
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                },
+                headers: { "Authorization": `Bearer ${token}` },
                 body: formData,
             });
 
-            const response = await request.json();
+            const data = await res.json();
 
-            if (request.ok && response.success) {
-                onAdd(response.data);
+            if (res.ok && data.success) {
+                onAdd(data.data);
                 onRefresh?.();
                 resetForm();
                 onClose();
             } else {
-                setApiError(response.message || "Failed to save property. Please try again.");
+                setApiError(data.message || "Failed to save property. Please try again.");
             }
-
         } catch {
-            setApiError("Network error. Please check your connection.");
+            setApiError("No details found at the moment.");
         } finally {
             setIsLoading(false);
         }
     };
 
+
     const handleEsc = useCallback(
         (e: KeyboardEvent) => { if (e.key === "Escape") onClose?.(); },
         [onClose]
     );
-
     useEffect(() => {
         window.addEventListener("keydown", handleEsc);
         return () => window.removeEventListener("keydown", handleEsc);
@@ -180,11 +180,12 @@ function AddPropertyModal({ isOpen, onClose, onAdd, onRefresh, property }: AddPr
             <div className="add_modal" onClick={(e) => e.stopPropagation()}>
 
                 <div className="modal_header">
-                    <h3>{property ? "Edit Property" : "Add Property"}</h3>
+                    <h3>{isEditing ? "Edit Property" : "Add Property"}</h3>
                 </div>
 
                 <div className="modal_body">
                     <form className="modal_form" onSubmit={handleSubmit}>
+
 
                         <div className="input_group">
                             <Input
@@ -196,16 +197,16 @@ function AddPropertyModal({ isOpen, onClose, onAdd, onRefresh, property }: AddPr
                                 required
                             />
                             <div className="input_meta">
-                                {errors.title ? (
-                                    <span className="input_error">{errors.title}</span>
-                                ) : (
-                                    <span className="input_count">{title.length}/{TITLE_MAX}</span>
-                                )}
+                                {errors.title
+                                    ? <span className="input_error">{errors.title}</span>
+                                    : <span className="input_count">{title.length}/{TITLE_MAX}</span>
+                                }
                             </div>
                         </div>
 
+
                         <div className="input_group">
-                            <label>Description</label>
+                            <label>Description <span style={{ color: "red" }}>*</span></label>
                             <textarea
                                 placeholder="Write here"
                                 value={description}
@@ -213,13 +214,13 @@ function AddPropertyModal({ isOpen, onClose, onAdd, onRefresh, property }: AddPr
                                 required
                             />
                             <div className="input_meta">
-                                {errors.description ? (
-                                    <span className="input_error">{errors.description}</span>
-                                ) : (
-                                    <span className="input_count">{description.length}/{DESCRIPTION_MAX}</span>
-                                )}
+                                {errors.description
+                                    ? <span className="input_error">{errors.description}</span>
+                                    : <span className="input_count">{description.length}/{DESCRIPTION_MAX}</span>
+                                }
                             </div>
                         </div>
+
 
                         <div className="input_body">
                             <Input
@@ -240,6 +241,7 @@ function AddPropertyModal({ isOpen, onClose, onAdd, onRefresh, property }: AddPr
                             />
                         </div>
 
+
                         <div className="input_body">
                             <Input
                                 label="Rent Amount (₦)"
@@ -249,14 +251,9 @@ function AddPropertyModal({ isOpen, onClose, onAdd, onRefresh, property }: AddPr
                                 onChange={(e) => setRent(e.target.value)}
                                 required
                             />
-
                             <div className="input_group">
-                                <label>Property Type</label>
-                                <select
-                                    value={type}
-                                    onChange={(e) => setType(e.target.value)}
-                                    required
-                                >
+                                <label>Property Type <span style={{ color: "red" }}>*</span></label>
+                                <select value={type} onChange={(e) => setType(e.target.value)} required>
                                     <option value="">Select</option>
                                     <option value="Apartment">Apartment</option>
                                     <option value="House">House</option>
@@ -266,10 +263,13 @@ function AddPropertyModal({ isOpen, onClose, onAdd, onRefresh, property }: AddPr
                             </div>
                         </div>
 
+
                         <div className="input_group">
                             <label>
-                                Upload Images{" "}
-                                <span className="input_hint">Max 2 MB per image</span>
+                                {isEditing ? "Replace Images" : "Upload Images"}{" "}
+                                <span className="input_hint">
+                                    Max 2 MB per image{isEditing ? " · leave empty to keep existing images" : ""}
+                                </span>
                             </label>
                             <input
                                 type="file"
@@ -295,21 +295,17 @@ function AddPropertyModal({ isOpen, onClose, onAdd, onRefresh, property }: AddPr
                         </div>
 
                         {apiError && (
-                            <p style={{ color: '#e53e3e', fontSize: '13px', marginBottom: '8px' }}>
+                            <p style={{ color: "#e53e3e", fontSize: "13px", marginBottom: "8px" }}>
                                 ⚠ {apiError}
                             </p>
                         )}
 
                         <div className="modal_actions">
-                            <ButtonAlt
-                                label="Cancel"
-                                type="button"
-                                onClick={onClose}
-                            />
+                            <ButtonAlt label="Cancel" type="button" onClick={onClose} />
                             <Button
                                 label={isLoading
-                                    ? (property ? "Saving..." : "Submitting...")
-                                    : (property ? "Save Changes" : "Submit for Approval")
+                                    ? (isEditing ? "Saving…" : "Submitting…")
+                                    : (isEditing ? "Save Changes" : "Submit for Approval")
                                 }
                                 type="submit"
                                 disabled={isLoading}

@@ -66,7 +66,7 @@ const TenantPaymentCard = ({
                 setShowConfirmCancel(false);
             }
         } catch {
-            setActionError("Network error. Please check your connection.");
+            setActionError("No details found at the moment.");
             setShowConfirmCancel(false);
         } finally {
             setIsCancelling(false);
@@ -98,7 +98,7 @@ const TenantPaymentCard = ({
                 setActionError(data.message || "Could not initialize payment. Please try again.");
             }
         } catch {
-            setActionError("Network error. Please check your connection.");
+            setActionError("No details found at the moment.");
         } finally {
             setIsInitiating(false);
         }

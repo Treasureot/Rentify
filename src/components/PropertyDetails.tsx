@@ -1,6 +1,6 @@
 import "../Styles/PropertyCard.css";
 import { MdLocationOn } from "react-icons/md";
-import { FiX } from "react-icons/fi";
+import { FiX, FiStar } from "react-icons/fi";
 import { useEffect, useState } from "react";
 
 type PropertyImage = {
@@ -39,6 +39,8 @@ type PropertyDetailsProps = {
     onClose: () => void;
     onDelete: (id: string) => void;
     onEdit: () => void;
+    /** Notifies parent when primary image changes */
+    onPrimarySet?: (propertyId: string, newPrimaryUrl: string) => void;
 };
 
 const formatCurrency = (amount: number) =>
@@ -46,9 +48,7 @@ const formatCurrency = (amount: number) =>
 
 const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString("en-NG", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+        year: "numeric", month: "long", day: "numeric",
     });
 
 const getStatusClass = (status: string) => {
@@ -69,77 +69,107 @@ const getOccupancyClass = (occupancy: string) => {
     }
 };
 
-const PropertyDetails = ({ id, onClose, onDelete, onEdit }: PropertyDetailsProps) => {
+const PropertyDetails = ({ id, onClose, onDelete, onEdit, onPrimarySet }: PropertyDetailsProps) => {
     const token = localStorage.getItem("accessToken") || "";
 
-    const [property, setProperty] = useState<PropertyDetail | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState("");
+    const [property, setProperty]     = useState<PropertyDetail | null>(null);
+    const [isLoading, setIsLoading]   = useState(true);
+    const [error, setError]           = useState("");
     const [activeImage, setActiveImage] = useState<string>("");
+    const [settingPrimary, setSettingPrimary] = useState<string | null>(null); 
 
+    // ── Fetch property by ID 
     useEffect(() => {
         const fetchProperty = async () => {
             setIsLoading(true);
             setError("");
-
             try {
-                const request = await fetch(
+                const res = await fetch(
                     `https://propms-api.fly.dev/api/v1/Properties/${id}`,
                     {
-                        method: "GET",
                         headers: {
                             "Content-Type": "application/json",
                             "Authorization": `Bearer ${token}`,
                         },
                     }
                 );
-
-                const response = await request.json();
-
-                if (request.ok && response.success) {
-                    setProperty(response.data);
-                    setActiveImage(response.data.primaryImageUrl || "");
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    setProperty(data.data);
+                    setActiveImage(data.data.primaryImageUrl || data.data.images?.[0]?.imageUrl || "");
                 } else {
-                    setError(response.message || "Failed to load property details.");
+                    setError(data.message || "Failed to load property details.");
                 }
-
             } catch {
-                setError("Network error. Please check your connection.");
+                setError("No details found at the moment.");
             } finally {
                 setIsLoading(false);
             }
         };
-
         fetchProperty();
     }, [id, token]);
 
+    // ── Set primary image 
+    // POST /Properties/{propertyId}/images/{imageId}/set-primary
+    const handleSetPrimary = async (imageId: string, imageUrl: string) => {
+        if (settingPrimary) return;
+        setSettingPrimary(imageId);
+        try {
+            const res = await fetch(
+                `https://propms-api.fly.dev/api/v1/Properties/${id}/images/${imageId}/set-primary`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                }
+            );
+            const data = await res.json();
+            if (res.ok && data.success) {
+                
+                setProperty((prev) => {
+                    if (!prev) return prev;
+                    return {
+                        ...prev,
+                        primaryImageUrl: imageUrl,
+                        images: prev.images.map((img) => ({
+                            ...img,
+                            isPrimary: img.id === imageId,
+                        })),
+                    };
+                });
+                setActiveImage(imageUrl);
+                onPrimarySet?.(id, imageUrl);
+            } else {
+                setError(data.message || "Failed to set primary image.");
+            }
+        } catch {
+            setError("No details found at the moment.");
+        } finally {
+            setSettingPrimary(null);
+        }
+    };
+
     return (
         <div className="property-card" style={{ width: "100%" }}>
-            <button
-                className="property_details_close"
-                onClick={onClose}
-                aria-label="Close details"
-            >
+            {/* Close button */}
+            <button className="property_details_close" onClick={onClose} aria-label="Close details">
                 <FiX size={20} />
             </button>
 
             {isLoading ? (
                 <p style={{ textAlign: "center", padding: "40px", color: "#94A3B8" }}>
-                    Loading property details...
+                    Loading property details…
                 </p>
             ) : error ? (
                 <div style={{
-                    backgroundColor: '#fff5f5',
-                    border: '1px solid #feb2b2',
-                    borderRadius: '8px',
-                    padding: '12px 16px',
-                    margin: '16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
+                    backgroundColor: "#fff5f5", border: "1px solid #feb2b2",
+                    borderRadius: "8px", padding: "12px 16px", margin: "16px",
+                    display: "flex", alignItems: "center", gap: "8px",
                 }}>
-                    <span style={{ color: '#e53e3e', fontSize: '18px' }}>⚠</span>
-                    <p style={{ color: '#e53e3e', fontSize: '14px', margin: 0 }}>{error}</p>
+                    <span style={{ color: "#e53e3e", fontSize: "18px" }}>⚠</span>
+                    <p style={{ color: "#e53e3e", fontSize: "14px", margin: 0 }}>{error}</p>
                 </div>
             ) : property && (
                 <>
@@ -149,44 +179,64 @@ const PropertyDetails = ({ id, onClose, onDelete, onEdit }: PropertyDetailsProps
                             src={activeImage || "/default-property.png"}
                             alt={property.title}
                             className="property-image"
-                            onError={(e) => {
-                                (e.target as HTMLImageElement).src = "/default-property.png";
-                            }}
+                            onError={(e) => { (e.target as HTMLImageElement).src = "/default-property.png"; }}
                         />
                         <span className={`property-status status ${getStatusClass(property.status)}`}>
                             ● {property.status}
                         </span>
-                        <span className={`status ${getOccupancyClass(property.occupancyStatus)}`}>
-                            {property.occupancyStatus}
-                        </span>
+                        {property.occupancyStatus && (
+                            <span className={`status ${getOccupancyClass(property.occupancyStatus)}`}
+                                style={{ position: "absolute", top: 12, right: 48 }}>
+                                {property.occupancyStatus}
+                            </span>
+                        )}
                     </div>
 
-                    {/* Image thumbnails */}
-                    {property.images.length > 1 && (
+                    {/* Image thumbnails with set-primary */}
+                    {property.images.length > 0 && (
                         <div style={{ display: "flex", gap: "8px", padding: "8px 16px", overflowX: "auto" }}>
                             {property.images.map((img) => (
-                                <img
-                                    key={img.id}
-                                    src={img.imageUrl}
-                                    alt={img.fileName}
-                                    onClick={() => setActiveImage(img.imageUrl)}
-                                    style={{
-                                        width: "60px",
-                                        height: "60px",
-                                        objectFit: "cover",
-                                        borderRadius: "6px",
-                                        cursor: "pointer",
-                                        border: activeImage === img.imageUrl
-                                            ? "2px solid var(--primary)"
-                                            : "2px solid transparent",
-                                    }}
-                                />
+                                <div key={img.id} style={{ position: "relative", flexShrink: 0 }}>
+                                    <img
+                                        src={img.imageUrl}
+                                        alt={img.fileName}
+                                        onClick={() => setActiveImage(img.imageUrl)}
+                                        onError={(e) => { (e.target as HTMLImageElement).src = "/default-property.png"; }}
+                                        style={{
+                                            width: "64px", height: "64px", objectFit: "cover",
+                                            borderRadius: "6px", cursor: "pointer", display: "block",
+                                            border: activeImage === img.imageUrl
+                                                ? "2px solid var(--primary)"
+                                                : "2px solid transparent",
+                                        }}
+                                    />
+                                    {/* Set-primary star button */}
+                                    <button
+                                        title={img.isPrimary ? "Primary image" : "Set as primary"}
+                                        onClick={() => !img.isPrimary && handleSetPrimary(img.id, img.imageUrl)}
+                                        disabled={!!settingPrimary || img.isPrimary}
+                                        style={{
+                                            position: "absolute", top: 2, right: 2,
+                                            width: "20px", height: "20px",
+                                            borderRadius: "50%", border: "none",
+                                            background: img.isPrimary ? "var(--primary)" : "rgba(255,255,255,0.85)",
+                                            color: img.isPrimary ? "#fff" : "#94A3B8",
+                                            display: "flex", alignItems: "center", justifyContent: "center",
+                                            cursor: img.isPrimary ? "default" : "pointer",
+                                            padding: 0,
+                                            opacity: settingPrimary === img.id ? 0.5 : 1,
+                                            transition: "opacity 0.2s",
+                                        }}
+                                        aria-label={img.isPrimary ? "Primary image" : "Set as primary image"}
+                                    >
+                                        <FiStar size={11} />
+                                    </button>
+                                </div>
                             ))}
                         </div>
                     )}
 
                     <div className="property-content">
-
                         <div className="property-price">
                             {formatCurrency(property.rentAmount)}
                             <span className="property-period"> / year</span>
@@ -218,7 +268,6 @@ const PropertyDetails = ({ id, onClose, onDelete, onEdit }: PropertyDetailsProps
                             </div>
                         )}
 
-                        {/* Landlord info */}
                         <div style={{ marginTop: "12px", fontSize: "14px" }}>
                             <span className="property_details_label">Landlord: </span>
                             {property.landlord.fullName}
@@ -237,19 +286,15 @@ const PropertyDetails = ({ id, onClose, onDelete, onEdit }: PropertyDetailsProps
                         {/* Rejection reason */}
                         {property.status === "Rejected" && property.rejectionReason && (
                             <div style={{
-                                backgroundColor: '#fff5f5',
-                                border: '1px solid #feb2b2',
-                                borderRadius: '8px',
-                                padding: '10px 14px',
-                                marginTop: '12px',
-                                fontSize: '13px',
-                                color: '#e53e3e',
+                                backgroundColor: "#fff5f5", border: "1px solid #feb2b2",
+                                borderRadius: "8px", padding: "10px 14px",
+                                marginTop: "12px", fontSize: "13px", color: "#e53e3e",
                             }}>
                                 <strong>Rejection Reason: </strong>{property.rejectionReason}
                             </div>
                         )}
 
-                        <div className="actions_group">
+                        <div className="actions_group" style={{ marginTop: "16px" }}>
                             <div className="dropdown_menu">
                                 <button className="btn_secondary" onClick={() => onDelete(property.id)}>
                                     Delete

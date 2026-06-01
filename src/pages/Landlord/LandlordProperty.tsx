@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import "../../Styles/Landlord.css";
 import LandlordSidebar from "../../components/LandlordSidebar";
 import DashboardHeader from "../../components/DashboardHeader";
 import Button from "../../components/Button";
 import PropertyTable from "../../components/PropertyTable";
 import AddPropertyModal from "../../components/AddPropertyModal";
+import ApprovalModal from "../../components/ApprovalModal";
+import SuccessModal from "../../components/SuccessModal";
 
 export type Property = {
     id: string;
@@ -38,64 +40,40 @@ const LandlordProperty = () => {
     const lastName  = localStorage.getItem("lastName")  || "";
     const token     = localStorage.getItem("accessToken") || "";
 
-    const [properties, setProperties]             = useState<Property[]>([]);
-    const [isLoading, setIsLoading]               = useState(true);
-    const [error, setError]                       = useState("");
     const [openModal, setOpenModal]               = useState(false);
     const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
 
-    const fetchProperties = async () => {
-        setIsLoading(true);
-        setError("");
+    // Delete confirmation
+    const [deleteTargetId, setDeleteTargetId]   = useState<string | null>(null);
+    const [isDeleting, setIsDeleting]           = useState(false);
+    const [deleteError, setDeleteError]         = useState("");
+    const [deleteSuccess, setDeleteSuccess]     = useState(false);
 
-        try {
-            const request = await fetch(
-                `https://propms-api.fly.dev/api/v1/Properties/my-properties`, 
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                }
-            );
+    
+    const [tableKey, setTableKey] = useState(0);
+    const refreshTable = useCallback(() => setTableKey((k) => k + 1), []);
 
-            const response = await request.json();
-
-            if (request.ok && response.success) {
-                setProperties(response.data);  
-            } else {
-                setError(response.message || "Failed to load properties.");
-            }
-
-        } catch {
-            setError("No Property Available. Please add a property to get started.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchProperties();
-    }, [token]);
-
-    const handleSaveProperty = (property: Property) => {
-        setProperties((prev) => {
-            const exists = prev.find((p) => p.id === property.id);
-            if (exists) return prev.map((p) => (p.id === property.id ? property : p));
-            return [...prev, property];
-        });
+    // ── Save (add or edit) 
+    const handleSaveProperty = (_property: Property) => {
         setOpenModal(false);
         setSelectedProperty(null);
+        refreshTable();
     };
 
-    const handleDelete = async (id: string) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this property?");
-        if (!confirmDelete) return;
+    // ── Delete 
+    // PropertyTable calls this, we open a confirmation modal 
+    const handleDeleteRequest = (id: string) => {
+        setDeleteError("");
+        setDeleteTargetId(id);
+    };
 
+    const handleConfirmDelete = async () => {
+        if (!deleteTargetId) return;
+        setIsDeleting(true);
+        setDeleteError("");
         try {
-            const request = await fetch(
-                `https://propms-api.fly.dev/api/v1/Properties/${id}`,
+            const res = await fetch(
+                `https://propms-api.fly.dev/api/v1/Properties/${deleteTargetId}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -104,16 +82,18 @@ const LandlordProperty = () => {
                     },
                 }
             );
-
-            const response = await request.json();
-
-            if (request.ok && response.success) {
-                setProperties((prev) => prev.filter((p) => p.id !== id));
+            const data = await res.json();
+            if (res.ok && data.success) {
+                setDeleteTargetId(null);
+                setDeleteSuccess(true);
+                refreshTable();
             } else {
-                setError(response.message || "Failed to delete property.");
+                setDeleteError(data.message || "Failed to delete property.");
             }
         } catch {
-            setError("Network error. Please check your connection.");
+            setDeleteError("No details found at the moment.");
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -130,10 +110,7 @@ const LandlordProperty = () => {
 
             <div className="landlord_body_right">
                 <div className="landlord_dashboard_header">
-                    <DashboardHeader
-                        firstName={firstName}
-                        lastName={lastName}
-                    />
+                    <DashboardHeader firstName={firstName} lastName={lastName} />
                 </div>
 
                 <div className="landlord_body">
@@ -142,54 +119,64 @@ const LandlordProperty = () => {
                             <h3>My Properties</h3>
                             <p>Manage and view all your properties.</p>
                         </div>
-
                         <div className="landlord_property_header_right">
                             <Button
                                 label="Add New Property"
-                                onClick={() => {
-                                    setSelectedProperty(null);
-                                    setOpenModal(true);
-                                }}
+                                onClick={() => { setSelectedProperty(null); setOpenModal(true); }}
                             />
                         </div>
                     </div>
 
+                    {/* Delete error banner */}
+                    {deleteError && (
+                        <div style={{
+                            backgroundColor: "#fff5f5", border: "1px solid #feb2b2",
+                            borderRadius: "8px", padding: "10px 14px", marginBottom: "12px",
+                            display: "flex", alignItems: "center", gap: "8px",
+                        }}>
+                            <span style={{ color: "#e53e3e" }}>⚠</span>
+                            <p style={{ color: "#e53e3e", fontSize: "14px", margin: 0 }}>{deleteError}</p>
+                        </div>
+                    )}
+
                     <div className="landlord_property_content">
-                        {isLoading ? (
-                            <p style={{ textAlign: "center", padding: "40px", color: "#94A3B8" }}>
-                                Loading properties...
-                            </p>
-                        ) : error ? (
-                            <div style={{
-                                backgroundColor: '#fff5f5',
-                                border: '1px solid #feb2b2',
-                                borderRadius: '8px',
-                                padding: '12px 16px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px'
-                            }}>
-                                <span style={{ color: '#e53e3e', fontSize: '18px' }}>⚠</span>
-                                <p style={{ color: '#e53e3e', fontSize: '14px', margin: 0 }}>{error}</p>
-                            </div>
-                        ) : (
-                            <PropertyTable
-                                properties={properties}
-                                onDelete={handleDelete}
-                                onEdit={handleEdit}
-                            />
-                        )}
+
+                        <PropertyTable
+                            key={tableKey}
+                            onDelete={handleDeleteRequest}
+                            onEdit={handleEdit}
+                        />
                     </div>
+
 
                     <AddPropertyModal
                         isOpen={openModal}
-                        onClose={() => {
-                            setOpenModal(false);
-                            setSelectedProperty(null);
-                        }}
+                        onClose={() => { setOpenModal(false); setSelectedProperty(null); }}
                         property={selectedProperty}
                         onAdd={handleSaveProperty}
-                        onRefresh={fetchProperties}
+                        onRefresh={refreshTable}
+                    />
+
+ 
+                    <ApprovalModal
+                        title="Delete Property"
+                        approvalMessage="Are you sure you want to permanently delete this property? This cannot be undone."
+                        isOpen={!!deleteTargetId}
+                        onClose={() => { setDeleteTargetId(null); setDeleteError(""); }}
+                        onConfirm={handleConfirmDelete}
+                        label={isDeleting ? "Deleting…" : "Delete"}
+                        labelAlt="Cancel"
+                    />
+
+
+                    <SuccessModal
+                        title="Property Deleted"
+                        message="The property has been successfully removed."
+                        label="Done"
+                        path=""
+                        isOpen={deleteSuccess}
+                        onClose={() => setDeleteSuccess(false)}
+                        onDone={() => setDeleteSuccess(false)}
                     />
                 </div>
             </div>

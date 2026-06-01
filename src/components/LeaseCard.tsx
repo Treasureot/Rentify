@@ -7,6 +7,7 @@ import Button from "./Button";
 import ApprovalModal from "./ApprovalModal";
 import SuccessModal from "./SuccessModal";
 import RejectModal from "./RejectModal";
+import RejectedModal from "./SuccessModal";
 import CreateLeaseModal from "./CreateLeaseModal";
 import { useState } from "react";
 
@@ -36,17 +37,6 @@ const formatDate = (dateStr: string) =>
         day: "numeric",
     });
 
-/** Map a status string to its pill colour class */
-const statusClass = (s: string) => {
-    switch (s) {
-        case "Active":     return "lease-request-status lease-request-status--active";
-        case "Approved":   return "lease-request-status lease-request-status--approved";
-        case "Rejected":   return "lease-request-status lease-request-status--rejected";
-        case "Terminated": return "lease-request-status lease-request-status--terminated";
-        default:           return "lease-request-status"; // Pending — amber (existing default)
-    }
-};
-
 const LeaseCard = ({
     id,
     propertyId,
@@ -64,25 +54,19 @@ const LeaseCard = ({
 }: LeaseCardProps) => {
     const token = localStorage.getItem("accessToken") || "";
 
-    const [currentStatus, setCurrentStatus]             = useState(status);
+    const [currentStatus, setCurrentStatus] = useState(status);
     const [openApprovalModal, setOpenApprovalModal]     = useState(false);
     const [openSuccessModal, setOpenSuccessModal]       = useState(false);
     const [openRejectModal, setOpenRejectModal]         = useState(false);
-    const [openRejectSuccessModal, setOpenRejectSuccessModal] = useState(false);
-    const [openCreateLeaseModal, setOpenCreateLeaseModal]     = useState(false);
-    // terminate
-    const [openTerminateModal, setOpenTerminateModal]         = useState(false);
-    const [openTerminateSuccessModal, setOpenTerminateSuccessModal] = useState(false);
+    const [openRejectedModal, setOpenRejectedModal]     = useState(false);
+    const [openCreateLeaseModal, setOpenCreateLeaseModal] = useState(false);
+    const [isVisible, setIsVisible]                     = useState(true);
+    const [actionError, setActionError]                 = useState('');
 
-    const [isVisible, setIsVisible]   = useState(true);
-    const [actionError, setActionError] = useState("");
-    const [successMsg, setSuccessMsg]   = useState("");
-
-    // ── Approve ───────────────────────────────────────────
     const handleApprovalConfirm = async () => {
-        setActionError("");
+        setActionError('');
         try {
-            const res = await fetch(
+            const request = await fetch(
                 `https://propms-api.fly.dev/api/v1/Leases/${id}/approve`,
                 {
                     method: "PATCH",
@@ -92,32 +76,31 @@ const LeaseCard = ({
                     },
                 }
             );
-            const data = await res.json();
-            if (res.ok && data.success) {
+            const response = await request.json();
+
+            if (request.ok && response.success) {
                 setOpenApprovalModal(false);
-                setSuccessMsg("You have successfully approved this lease request. Tenant notified.");
                 setOpenSuccessModal(true);
             } else {
-                setActionError(data.message || "Failed to approve lease.");
+                setActionError(response.message || 'Failed to approve lease.');
                 setOpenApprovalModal(false);
             }
         } catch {
-            setActionError("Network error. Please check your connection.");
+            setActionError('No details found at the moment.');
             setOpenApprovalModal(false);
         }
     };
 
-    const handleApproveDone = () => {
+    const handleSuccessDone = () => {
         setOpenSuccessModal(false);
         setCurrentStatus("Approved");
         onStatusChange?.(id, "Approved");
     };
 
-    // ── Reject ────────────────────────────────────────────
     const handleRejectConfirm = async (reason: string) => {
-        setActionError("");
+        setActionError('');
         try {
-            const res = await fetch(
+            const request = await fetch(
                 `https://propms-api.fly.dev/api/v1/Leases/${id}/reject`,
                 {
                     method: "PATCH",
@@ -128,69 +111,30 @@ const LeaseCard = ({
                     body: JSON.stringify({ reason }),
                 }
             );
-            const data = await res.json();
-            if (res.ok && data.success) {
+            const response = await request.json();
+
+            if (request.ok && response.success) {
                 setOpenRejectModal(false);
-                setSuccessMsg("You have successfully rejected this lease request. Tenant notified.");
-                setOpenRejectSuccessModal(true);
+                setOpenRejectedModal(true);
             } else {
-                setActionError(data.message || "Failed to reject lease.");
+                setActionError(response.message || 'Failed to reject lease.');
                 setOpenRejectModal(false);
             }
         } catch {
-            setActionError("Network error. Please check your connection.");
+            setActionError('No Lease found or No details found at the moment.');
             setOpenRejectModal(false);
         }
     };
 
-    const handleRejectDone = () => {
-        setOpenRejectSuccessModal(false);
+    const handleRejectedDone = () => {
+        setOpenRejectedModal(false);
         setCurrentStatus("Rejected");
         onStatusChange?.(id, "Rejected");
-        // Hide rejected cards after a beat so the list stays clean
         setIsVisible(false);
     };
 
-    // ── Create Lease (Approved → Active) ──────────────────
-    const handleLeaseCreated = () => {
+    const handleCreateLease = () => {
         setOpenCreateLeaseModal(false);
-        setCurrentStatus("Active");
-        onStatusChange?.(id, "Active");
-    };
-
-    // ── Terminate (Active → Terminated) ──────────────────
-    const handleTerminateConfirm = async () => {
-        setActionError("");
-        try {
-            const res = await fetch(
-                `https://propms-api.fly.dev/api/v1/Leases/${id}/terminate`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                }
-            );
-            const data = await res.json();
-            if (res.ok && data.success) {
-                setOpenTerminateModal(false);
-                setSuccessMsg(data.message || "Lease has been terminated successfully. Tenant notified.");
-                setOpenTerminateSuccessModal(true);
-            } else {
-                setActionError(data.message || "Failed to terminate lease.");
-                setOpenTerminateModal(false);
-            }
-        } catch {
-            setActionError("Network error. Please check your connection.");
-            setOpenTerminateModal(false);
-        }
-    };
-
-    const handleTerminateDone = () => {
-        setOpenTerminateSuccessModal(false);
-        setCurrentStatus("Terminated");
-        onStatusChange?.(id, "Terminated");
     };
 
     if (!isVisible) return null;
@@ -198,7 +142,7 @@ const LeaseCard = ({
     return (
         <div className="payment-card">
             <div className="property-content">
-                <span className={statusClass(currentStatus)}>● {currentStatus}</span>
+                <span className="lease-request-status">● {currentStatus}</span>
 
                 <div className="lease-price">
                     <FaNairaSign size={20} />
@@ -213,7 +157,7 @@ const LeaseCard = ({
                     {propertyAddress}
                 </div>
 
-                <div className="divider" />
+                <div className="divider"></div>
 
                 <div className="property-tenant">
                     <div className="tenant-details">
@@ -239,56 +183,30 @@ const LeaseCard = ({
                 </div>
 
                 {actionError && (
-                    <p style={{ color: "#e53e3e", fontSize: "13px", marginTop: "8px" }}>
+                    <p style={{ color: '#e53e3e', fontSize: '13px', marginTop: '8px' }}>
                         ⚠ {actionError}
                     </p>
                 )}
 
-                {/* ── Action area ── */}
-                <div className="modal_actions" style={{ marginTop: "16px" }}>
-
-                    {/* Pending — approve / reject */}
-                    {currentStatus === "Pending" && (
-                        <>
-                            <ButtonAlt label="Reject"  onClick={() => setOpenRejectModal(true)} />
-                            <Button    label="Approve" onClick={() => setOpenApprovalModal(true)} />
-                        </>
-                    )}
-
-                    {/* Approved — create formal lease */}
-                    {currentStatus === "Approved" && (
+                <div className="modal_actions">
+                    {currentStatus === "Approved" ? (
                         <Button
                             label="Create Lease"
                             className="btn_create_lease"
                             onClick={() => setOpenCreateLeaseModal(true)}
                         />
-                    )}
-
-                    {/* Active — terminate */}
-                    {currentStatus === "Active" && (
-                        <ButtonAlt
-                            label="Terminate Lease"
-                            onClick={() => setOpenTerminateModal(true)}
-                        />
-                    )}
-
-                    {/* Rejected */}
-                    {currentStatus === "Rejected" && (
-                        <p style={{ color: "#94A3B8", fontSize: "13px" }}>
+                    ) : currentStatus === "Rejected" ? (
+                        <p style={{ color: '#94A3B8', fontSize: '13px' }}>
                             This lease request has been rejected.
                         </p>
-                    )}
-
-                    {/* Terminated */}
-                    {currentStatus === "Terminated" && (
-                        <p style={{ color: "#94A3B8", fontSize: "13px" }}>
-                            This lease has been terminated.
-                        </p>
+                    ) : (
+                        <>
+                            <ButtonAlt label="Reject"  onClick={() => setOpenRejectModal(true)} />
+                            <Button    label="Approve" onClick={() => setOpenApprovalModal(true)} />
+                        </>
                     )}
                 </div>
             </div>
-
-            {/* ── Modals ── */}
 
             <ApprovalModal
                 title="Approve Lease Request"
@@ -296,37 +214,36 @@ const LeaseCard = ({
                 isOpen={openApprovalModal}
                 onClose={() => setOpenApprovalModal(false)}
                 onConfirm={handleApprovalConfirm}
-                label="Approve"
+                label="Approve Request"
                 labelAlt="Cancel"
             />
 
             <SuccessModal
                 title="Approved Successfully"
-                message={successMsg}
+                message="You have successfully approved this lease request. Tenant notified."
                 label="Done"
                 path=""
                 isOpen={openSuccessModal}
-                onClose={handleApproveDone}
-                onDone={handleApproveDone}
+                onClose={() => setOpenSuccessModal(false)}
+                onDone={handleSuccessDone}
             />
 
             <RejectModal
                 title="Reject Lease Request"
-                message="Please provide a reason for rejecting this lease request."
+                message="Are you sure you want to reject this lease request?"
                 label="Reject"
                 isOpen={openRejectModal}
                 onClose={() => setOpenRejectModal(false)}
                 onConfirm={handleRejectConfirm}
             />
 
-            <SuccessModal
+            <RejectedModal
                 title="Rejected Successfully"
-                message={successMsg}
+                message="You have successfully rejected this lease request. Tenant notified."
                 label="Done"
                 path=""
-                isOpen={openRejectSuccessModal}
-                onClose={handleRejectDone}
-                onDone={handleRejectDone}
+                isOpen={openRejectedModal}
+                onClose={handleRejectedDone}
             />
 
             <CreateLeaseModal
@@ -334,32 +251,11 @@ const LeaseCard = ({
                 tenantId={tenantId}
                 isOpen={openCreateLeaseModal}
                 onClose={() => setOpenCreateLeaseModal(false)}
-                onLeaseCreated={handleLeaseCreated}
+                onLeaseCreated={handleCreateLease}
                 leaseId={id}
                 startDate={startDate}
                 endDate={endDate}
                 rentAmount={rentAmount.toString()}
-            />
-
-            {/* Terminate confirm */}
-            <ApprovalModal
-                title="Terminate Lease"
-                approvalMessage="Are you sure you want to terminate this lease? This action cannot be undone and the tenant will be notified."
-                isOpen={openTerminateModal}
-                onClose={() => setOpenTerminateModal(false)}
-                onConfirm={handleTerminateConfirm}
-                label="Terminate"
-                labelAlt="Cancel"
-            />
-
-            <SuccessModal
-                title="Lease Terminated"
-                message={successMsg}
-                label="Done"
-                path=""
-                isOpen={openTerminateSuccessModal}
-                onClose={handleTerminateDone}
-                onDone={handleTerminateDone}
             />
         </div>
     );

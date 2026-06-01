@@ -82,7 +82,7 @@ const ScheduleTable = ({ lease, role = "landlord", onPayment }: ScheduleTablePro
                     setError(data.message || "Failed to load payment schedule.");
                 }
             } catch {
-                setError("Network error. Please check your connection.");
+                setError("No details found at the moment.");
             } finally {
                 setIsLoading(false);
             }
@@ -135,7 +135,7 @@ const ScheduleTable = ({ lease, role = "landlord", onPayment }: ScheduleTablePro
                 setPaystackError(data.message || "Payment initialization failed. Please try again.");
             }
         } catch {
-            setPaystackError("Network error. Please check your connection.");
+            setPaystackError("No details found at the moment.");
         } finally {
             setInitiatingId(null);
         }

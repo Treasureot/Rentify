@@ -1,64 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TenantHeader from "../../components/TenantHeader";
 import TenantSidebar from "../../components/TenantSidebar";
 import LeaseRequestModal from "../../components/LeaseRequestModal";
 import { FaBed, FaBath } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import cardImg from "../../assets/images/card-1.png";
 import "../../Styles/Tenant.css";
-import Button from "../../components/Button";
+import Button from "../../components/ButtonAlt";
 import SuccessModal from "../../components/SuccessModal";
 
-type PropertyImage = {
-    id: string;
-    imageUrl: string;
-    fileName: string;
-    isPrimary: boolean;
-};
+const allProperties = [
+    { id: 1,  price: "₦1,200,000", title: "2-Bedroom Apartment in Lekki",        location: "Lekki Phase 1, Lagos",   beds: 2, baths: 2, landlordName: "Mr. Ade Bello",    landlordEmail: "ade.bello@email.com",    landlordPhone: "+234 801 234 5678" },
+    { id: 2,  price: "₦850,000",   title: "Self-Contained Studio in Yaba",       location: "Yaba, Lagos",            beds: 1, baths: 1, landlordName: "Mrs. Kemi Osei",   landlordEmail: "kemi.osei@email.com",    landlordPhone: "+234 802 345 6789" },
+    { id: 3,  price: "₦2,500,000", title: "3-Bedroom Duplex in Victoria Island", location: "Victoria Island, Lagos", beds: 3, baths: 3, landlordName: "Mr. Tunde Lawal",  landlordEmail: "tunde.lawal@email.com",  landlordPhone: "+234 803 456 7890" },
+    { id: 4,  price: "₦950,000",   title: "1-Bedroom Flat in Surulere",          location: "Surulere, Lagos",        beds: 1, baths: 1, landlordName: "Mrs. Ngozi Eze",   landlordEmail: "ngozi.eze@email.com",    landlordPhone: "+234 804 567 8901" },
+    { id: 5,  price: "₦1,800,000", title: "3-Bedroom Apartment in Ikoyi",        location: "Ikoyi, Lagos",           beds: 3, baths: 2, landlordName: "Mr. Emeka Okafor", landlordEmail: "emeka.okafor@email.com", landlordPhone: "+234 805 678 9012" },
+    { id: 6,  price: "₦700,000",   title: "Self-Contained in Gbagada",           location: "Gbagada, Lagos",         beds: 1, baths: 1, landlordName: "Mrs. Amaka Nwosu", landlordEmail: "amaka.nwosu@email.com",  landlordPhone: "+234 806 789 0123" },
+    { id: 7,  price: "₦1,400,000", title: "2-Bedroom Flat in Ajah",              location: "Ajah, Lagos",            beds: 2, baths: 2, landlordName: "Mr. Seun Adeyemi", landlordEmail: "seun.adeyemi@email.com", landlordPhone: "+234 807 890 1234" },
+    { id: 8,  price: "₦3,000,000", title: "4-Bedroom Duplex in Banana Island",   location: "Banana Island, Lagos",   beds: 4, baths: 4, landlordName: "Dr. Fola Abiodun", landlordEmail: "fola.abiodun@email.com", landlordPhone: "+234 808 901 2345" },
+    { id: 9,  price: "₦600,000",   title: "Mini Flat in Mushin",                 location: "Mushin, Lagos",          beds: 1, baths: 1, landlordName: "Mr. Biodun Salami", landlordEmail: "biodun.salami@email.com", landlordPhone: "+234 809 012 3456" },
+    { id: 10, price: "₦1,100,000", title: "2-Bedroom Bungalow in Ikeja",         location: "Ikeja, Lagos",           beds: 2, baths: 1, landlordName: "Mrs. Bisi Fagbemi", landlordEmail: "bisi.fagbemi@email.com",  landlordPhone: "+234 810 123 4567" },
+    { id: 11, price: "₦2,200,000", title: "3-Bedroom Terrace in Oniru",          location: "Oniru, Lagos",           beds: 3, baths: 3, landlordName: "Mr. Chidi Obiora",  landlordEmail: "chidi.obiora@email.com",  landlordPhone: "+234 811 234 5678" },
+    { id: 12, price: "₦780,000",   title: "1-Bedroom Apartment in Ojota",        location: "Ojota, Lagos",           beds: 1, baths: 1, landlordName: "Mrs. Yetunde Ogun", landlordEmail: "yetunde.ogun@email.com",  landlordPhone: "+234 812 345 6789" },
+];
 
-type PropertyLandlord = {
-    id: string;
-    fullName: string;
-    email: string;
-    phoneNumber: string;
-};
-
-type PropertyDetail = {
-    id: string;
-    title: string;
-    description: string;
-    location: string;
-    address: string;
-    rentAmount: number;
-    propertyType: string;
-    status: string;
-    occupancyStatus: string;
-    rejectionReason: string | null;
-    primaryImageUrl: string;
-    createdDate: string;
-    landlord: PropertyLandlord;
-    images: PropertyImage[];
-};
-
-const formatCurrency = (amount: number) =>
-    `₦${new Intl.NumberFormat("en-NG").format(amount)}`;
-
-const parseDetail = (description: string, key: string): number => {
-    const match = description?.match(new RegExp(`${key}:(\\d+)`));
-    return match ? parseInt(match[1]) : 0;
-};
-
-const ImageCarousel = ({ images, title }: { images: PropertyImage[]; title: string }) => {
+const ImageCarousel = ({ images, title }: { images: string[]; title: string }) => {
     const [activeIndex, setActiveIndex] = useState(0);
-
-    if (images.length === 0) {
-        return (
-            <div className="carousel__main" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94A3B8' }}>
-                No images available
-            </div>
-        );
-    }
 
     const goPrev = () =>
         setActiveIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -70,56 +38,41 @@ const ImageCarousel = ({ images, title }: { images: PropertyImage[]; title: stri
         <div className="carousel">
             <div className="carousel__main">
                 <img
-                    src={images[activeIndex].imageUrl}
+                    src={images[activeIndex]}
                     alt={`${title} — image ${activeIndex + 1}`}
                     className="carousel__main-img"
-                    onError={(e) => {
-                        (e.target as HTMLImageElement).src = "/default-property.png";
-                    }}
                 />
-                {images.length > 1 && (
-                    <>
-                        <button
-                            className="carousel__arrow carousel__arrow--prev"
-                            onClick={goPrev}
-                            aria-label="Previous image"
-                        >
-                            <FiChevronLeft size={20} />
-                        </button>
-                        <button
-                            className="carousel__arrow carousel__arrow--next"
-                            onClick={goNext}
-                            aria-label="Next image"
-                        >
-                            <FiChevronRight size={20} />
-                        </button>
-                        <span className="carousel__counter">
-                            {activeIndex + 1} / {images.length}
-                        </span>
-                    </>
-                )}
+                <button
+                    className="carousel__arrow carousel__arrow--prev"
+                    onClick={goPrev}
+                    aria-label="Previous image"
+                >
+                    &#8249;
+                </button>
+                <button
+                    className="carousel__arrow carousel__arrow--next"
+                    onClick={goNext}
+                    aria-label="Next image"
+                >
+                    &#8250;
+                </button>
+                <span className="carousel__counter">
+                    {activeIndex + 1} / {images.length}
+                </span>
             </div>
 
-            {images.length > 1 && (
-                <div className="carousel__thumbnails">
-                    {images.map((img, index) => (
-                        <button
-                            key={img.id}
-                            className={`carousel__thumb ${index === activeIndex ? "carousel__thumb--active" : ""}`}
-                            onClick={() => setActiveIndex(index)}
-                            aria-label={`View image ${index + 1}`}
-                        >
-                            <img
-                                src={img.imageUrl}
-                                alt={`Thumbnail ${index + 1}`}
-                                onError={(e) => {
-                                    (e.target as HTMLImageElement).src = "/default-property.png";
-                                }}
-                            />
-                        </button>
-                    ))}
-                </div>
-            )}
+            <div className="carousel__thumbnails">
+                {images.map((img, index) => (
+                    <button
+                        key={index}
+                        className={`carousel__thumb ${index === activeIndex ? "carousel__thumb--active" : ""}`}
+                        onClick={() => setActiveIndex(index)}
+                        aria-label={`View image ${index + 1}`}
+                    >
+                        <img src={img} alt={`Thumbnail ${index + 1}`} />
+                    </button>
+                ))}
+            </div>
         </div>
     );
 };
@@ -127,52 +80,11 @@ const ImageCarousel = ({ images, title }: { images: PropertyImage[]; title: stri
 const PropertyDetailsPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-
-    const token     = localStorage.getItem("accessToken") || "";
-    const firstName = localStorage.getItem("firstName") || "";
-    const lastName  = localStorage.getItem("lastName")  || "";
-
-    const [property, setProperty]             = useState<PropertyDetail | null>(null);
-    const [isLoading, setIsLoading]           = useState(true);
-    const [error, setError]                   = useState("");
-    const [isLeaseModalOpen, setIsLeaseModalOpen]     = useState(false);
+    const [isLeaseModalOpen, setIsLeaseModalOpen] = useState(false);
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
-    useEffect(() => {
-        if (!id) return;
-
-        const fetchProperty = async () => {
-            setIsLoading(true);
-            setError("");
-
-            try {
-                const request = await fetch(
-                    `https://propms-api.fly.dev/api/v1/Properties/${id}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`,
-                        },
-                    }
-                );
-
-                const response = await request.json();
-
-                if (request.ok && response.success) {
-                    setProperty(response.data);
-                } else {
-                    setError(response.message || "Failed to load property details.");
-                }
-            } catch {
-                setError("Network error. Please check your connection.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchProperty();
-    }, [id, token]);
+    const property = allProperties.find((p) => p.id === Number(id));
+    const propertyImages = [cardImg, cardImg, cardImg, cardImg, cardImg];
 
     const handleLeaseSubmitSuccess = () => {
         setIsLeaseModalOpen(false);
@@ -182,7 +94,10 @@ const PropertyDetailsPage = () => {
     return (
         <div className="tenant">
             <div className="tenant_top">
-                <TenantHeader firstName={firstName} lastName={lastName} />
+                <TenantHeader
+                    firstName="Sarah"
+                    lastName="Doe"
+                />
             </div>
 
             <div className="tenant_bottom">
@@ -198,56 +113,25 @@ const PropertyDetailsPage = () => {
                         &#8592; Back to listings
                     </button>
 
-                    {isLoading ? (
-                        <p style={{ textAlign: "center", padding: "40px", color: "#94A3B8" }}>
-                            Loading property details...
-                        </p>
-                    ) : error ? (
-                        <div style={{
-                            backgroundColor: '#fff5f5',
-                            border: '1px solid #feb2b2',
-                            borderRadius: '8px',
-                            padding: '12px 16px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px'
-                        }}>
-                            <span style={{ color: '#e53e3e', fontSize: '18px' }}>⚠</span>
-                            <p style={{ color: '#e53e3e', fontSize: '14px', margin: 0 }}>{error}</p>
-                        </div>
-                    ) : property ? (
+                    {property ? (
                         <div className="property-details__layout">
+
                             <div className="property-details">
-                                <ImageCarousel images={property.images} title={property.title} />
+                                <ImageCarousel images={propertyImages} title={property.title} />
 
                                 <h2 className="property-details__title">{property.title}</h2>
                                 <p className="property-details__price">
-                                    {formatCurrency(property.rentAmount)} <span>/year</span>
+                                    {property.price} <span>/year</span>
                                 </p>
                                 <p className="property-details__location">
                                     <MdLocationOn size={16} /> {property.location}
                                 </p>
-                                {property.address && (
-                                    <p className="property-details__location" style={{ marginTop: 4 }}>
-                                        <MdLocationOn size={14} /> {property.address}
-                                    </p>
-                                )}
                                 <div className="property-details__meta">
-                                    <span>{property.propertyType || "Property"}</span>
-                                    <span>{property.occupancyStatus || "—"}</span>
-                                    <span>
-                                        <FaBed size={14} /> {parseDetail(property.description, "Beds") || "—"} Bed
-                                    </span>
-                                    <span>
-                                        <FaBath size={14} /> {parseDetail(property.description, "Baths") || "—"} Bath
-                                    </span>
+                                    <span><FaBed size={14} /> {property.beds} Bed{property.beds > 1 ? "s" : ""}</span>
+                                    <span><FaBath size={14} /> {property.baths} Bath{property.baths > 1 ? "s" : ""}</span>
                                 </div>
-                                {property.description && (
-                                    <p style={{ marginTop: 16, fontSize: 14, color: 'var(--bodytext)', lineHeight: 1.6 }}>
-                                        {property.description}
-                                    </p>
-                                )}
                             </div>
+
 
                             <div className="property_landlord">
                                 <div className="landlord_info">
@@ -255,28 +139,25 @@ const PropertyDetailsPage = () => {
 
                                     <div className="landlord_group">
                                         <p className="landlord_label">Name</p>
-                                        <p className="landlord_value">{property.landlord.fullName}</p>
+                                        <p className="landlord_value">{property.landlordName}</p>
                                     </div>
 
                                     <div className="landlord_group">
                                         <p className="landlord_label">Email</p>
-                                        <p className="landlord_value">{property.landlord.email}</p>
+                                        <p className="landlord_value">{property.landlordEmail}</p>
                                     </div>
 
-                                    {property.landlord.phoneNumber && (
-                                        <div className="landlord_group">
-                                            <p className="landlord_label">Phone Number</p>
-                                            <p className="landlord_value">{property.landlord.phoneNumber}</p>
-                                        </div>
-                                    )}
+                                    <div className="landlord_group">
+                                        <p className="landlord_label">Phone Number</p>
+                                        <p className="landlord_value">{property.landlordPhone}</p>
+                                    </div>
                                 </div>
 
-                                {property.occupancyStatus !== "Occupied" && (
-                                    <Button
-                                        label="Request Lease"
-                                        onClick={() => setIsLeaseModalOpen(true)}
-                                    />
-                                )}
+                                <Button
+                                    className="btn_primary"
+                                    label="Request Lease"
+                                    onClick={() => setIsLeaseModalOpen(true)}
+                                />
                             </div>
                         </div>
                     ) : (
@@ -299,7 +180,6 @@ const PropertyDetailsPage = () => {
                 onClose={() => setIsLeaseModalOpen(false)}
                 onSuccess={handleLeaseSubmitSuccess}
                 propertyTitle={property?.title}
-                propertyId={property?.id}
             />
 
             <SuccessModal
@@ -308,7 +188,7 @@ const PropertyDetailsPage = () => {
                 label="Done"
                 message="Your lease request has been successfully sent to the landlord. You will receive a response within 24-48 hours."
                 onClose={() => setIsSuccessModalOpen(false)}
-                path="/tenant-lease"
+                path="/tenant"
             />
         </div>
     );

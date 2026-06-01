@@ -50,7 +50,7 @@ const Landlord = () => {
                 }
 
             } catch (err) {
-                setError('Network error. Please check your connection.');
+                setError('');
             } finally {
                 setIsLoading(false);
             }

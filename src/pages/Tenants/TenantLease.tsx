@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import TenantPaymentCard from "../../components/TenantPaymentCard";
 import TenantPaymentSchedule from "../Tenants/TenantPaymentSchedule";
 import TenantHeader from "../../components/TenantHeader";
@@ -35,44 +35,46 @@ const TenantLease = () => {
     const [isLoading, setIsLoading]                   = useState(true);
     const [error, setError]                           = useState('');
 
-    const fetchLeases = useCallback(async () => {
-        setIsLoading(true);
-        setError('');
-
-        try {
-            const request = await fetch(
-                `https://propms-api.fly.dev/api/v1/Leases/my-leases`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                }
-            );
-
-            const response = await request.json();
-
-            if (request.ok && response.success) {
-                setAllLeases(response.data);
-            } else {
-                setError(response.message || 'Failed to load leases.');
-            }
-        } catch {
-            setError('Network error. Please check your connection.');
-        } finally {
-            setIsLoading(false);
-        }
-    }, [token]);
-
     useEffect(() => {
+        const fetchLeases = async () => {
+            setIsLoading(true);
+            setError('');
+
+            try {
+                const request = await fetch(
+                    `https://propms-api.fly.dev/api/v1/Leases/my-leases`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                const response = await request.json();
+
+                if (request.ok && response.success) {
+                    setAllLeases(response.data);
+                } else {
+                    setError(response.message || 'Failed to load leases.');
+                }
+
+            } catch {
+                setError('No details found at the moment.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
         fetchLeases();
-    }, [fetchLeases]);
+    }, [token]);
 
     const filteredLeases =
         activeTab === "All"
             ? allLeases
             : allLeases.filter((l) => l.status === activeTab);
+
 
     const scheduleForLease = viewingScheduleFor
         ? allLeases.find((l) => l.id === viewingScheduleFor) ?? null
@@ -161,7 +163,6 @@ const TenantLease = () => {
                                         key={lease.id}
                                         lease={lease}
                                         onViewSchedule={() => setViewingScheduleFor(lease.id)}
-                                        onLeaseUpdated={() => fetchLeases()}
                                     />
                                 ))
                             ) : (

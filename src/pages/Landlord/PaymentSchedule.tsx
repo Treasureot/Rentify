@@ -46,7 +46,7 @@ const PaymentSchedule = () => {
                     setError(response.message || "Failed to load lease details.");
                 }
             } catch {
-                setError("Network error. Please check your connection.");
+                setError("No details found at the moment.");
             } finally {
                 setIsLoading(false);
             }

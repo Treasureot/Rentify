@@ -62,7 +62,7 @@ const LandlordPayment = () => {
                 setError(data.message || "Failed to load leases.");
             }
         } catch {
-            setError("Network error. Please check your connection.");
+            setError("No details found at the moment.");
         } finally {
             setIsLoading(false);
         }
